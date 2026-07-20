@@ -4,12 +4,17 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+JQ_BIN="$(command -v jq || true)"
 UNSIGNED=false
 if [[ "${1:-}" == "--unsigned" ]]; then
     UNSIGNED=true
     shift
 fi
 APP_PATH="${1:-}"
+[[ -n "$JQ_BIN" ]] || {
+    echo "jq is required to verify release metadata" >&2
+    exit 69
+}
 [[ -d "$APP_PATH" && "$(basename "$APP_PATH")" == "SpruceMyMac.app" ]] || {
     echo "usage: $0 [--unsigned] /path/to/SpruceMyMac.app" >&2
     exit 64
@@ -41,8 +46,8 @@ done
 
 bundle_id=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$CONTENTS/Info.plist")
 [[ "$bundle_id" == "com.van426326.sprucemymac" ]]
-[[ "$(/usr/bin/jq -r .commit "$ENGINE_METADATA")" == \
-    "$(/usr/bin/jq -r .commit "$ROOT_DIR/Engine/UPSTREAM.json")" ]]
+[[ "$("$JQ_BIN" -r .commit "$ENGINE_METADATA")" == \
+    "$("$JQ_BIN" -r .commit "$ROOT_DIR/Engine/UPSTREAM.json")" ]]
 
 if [[ "$UNSIGNED" == "false" ]]; then
     /usr/bin/codesign --verify --deep --strict --verbose=2 "$APP_PATH"

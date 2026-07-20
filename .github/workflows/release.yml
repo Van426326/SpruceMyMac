@@ -19,8 +19,8 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install XcodeGen
-        run: brew install xcodegen
+      - name: Install build tools
+        run: brew install xcodegen jq
 
       - name: Validate version tag
         run: |
