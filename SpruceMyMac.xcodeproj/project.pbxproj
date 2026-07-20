@@ -17,7 +17,6 @@
 		2AAAA9AE4831017E99553E5F /* CleanupPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7332339D83F656F4E6DF53 /* CleanupPlan.swift */; };
 		304DDF24C7B1B2C6B80E604D /* SpaceAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACE7618DA43C49D82B741BB /* SpaceAnalyzer.swift */; };
 		39130FA18ABAE369667851C2 /* OperationHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E62709DBCE3FF70D6C6836 /* OperationHistoryView.swift */; };
-		443CB3B0790D4C34B0C0E97B /* PrivilegedHelperProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE6A16DE2CE50A6DA766BE /* PrivilegedHelperProtocolTests.swift */; };
 		45535F9F26F4206B3C0E8072 /* AppSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8013303A25B86B6A5D0DBE0C /* AppSection.swift */; };
 		4AEFB85C4EAF529C3F289FE7 /* AnalyzedFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17369F85710118F29BF4194F /* AnalyzedFile.swift */; };
 		55C68A4B2ADC23A7498D78F0 /* EngineEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4B4ADBC5E7EDF4A43AFE27 /* EngineEventTests.swift */; };
@@ -34,13 +33,8 @@
 		88DADF72B1D7E2F0B75B7CD0 /* MoleBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3B7DAEB7B14F049FA4CA56 /* MoleBridge.swift */; };
 		893066E0BAEC6E1C99844BE8 /* ByteFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD6AF3D8C41ECEFB1A63222 /* ByteFormatting.swift */; };
 		8DF47CB09513E0E2682FCF96 /* SystemSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03ED018F84C75024DE74BC1 /* SystemSnapshotTests.swift */; };
-		8FA10C5027E7F12657FAB172 /* PrivilegedHelperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7B3A828CBDDC6B0FAB475E /* PrivilegedHelperManager.swift */; };
 		90269A7674B3AC1387EF4C2A /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6111C439C80E484A08C742E /* SystemMonitor.swift */; };
-		93221DB895A3C6880A310B3D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29902F6717D800EC1FAD3B8B /* main.swift */; };
 		96AA90149BE3B7DE44FF025D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCE0C3BCDEB0CE74FF81B41 /* AppView.swift */; };
-		9854BF0D5CA2F3F3D124415B /* PrivilegedHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B750BC0A3F16130783959262 /* PrivilegedHelperProtocol.swift */; };
-		A108FBD491D5E120EB9270B5 /* FixedCommandRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7B5724DC4504DD04E9F437 /* FixedCommandRunner.swift */; };
-		A894FCE2CE1A74329AA36768 /* PrivilegedHelperService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E62C05BD1F3DBEE9E1A80A3 /* PrivilegedHelperService.swift */; };
 		B526EC449E4183D00DF1AE44 /* CleanupPlanPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02D9EE062835B57CFA5C304 /* CleanupPlanPreviewView.swift */; };
 		C25D540E2B191EC4CECF33F9 /* ApplicationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D85F82A29927B6851E2C43F3 /* ApplicationsView.swift */; };
 		CBAE1D4C51D2FF1FFA0963CA /* CleanupCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 528D0B98015C62ABB298A6F3 /* CleanupCandidate.swift */; };
@@ -52,7 +46,7 @@
 		D5FFFAA2D49295401D402832 /* SpaceAnalyzerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9BF0B763E62A41FA448E67 /* SpaceAnalyzerTests.swift */; };
 		D75FDAF44B9C3397F32D97F8 /* ApplicationIconCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D263E7033259A0621E7528 /* ApplicationIconCache.swift */; };
 		D9D1CA972A915F9575880595 /* SystemSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = CACFFD6B12A6B9A9EDA47DC3 /* SystemSnapshot.swift */; };
-		E151074C1B283481EBB515D0 /* PrivilegedHelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B750BC0A3F16130783959262 /* PrivilegedHelperProtocol.swift */; };
+		DBA5DEBFECF287295CF408E3 /* SystemMaintenanceCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69BF78464654FB9B99022CC6 /* SystemMaintenanceCommandTests.swift */; };
 		E8034579BA85A194DD4A5660 /* CleanupPlanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B901EB3662F528864C680916 /* CleanupPlanTests.swift */; };
 		EA6D1BD938CAD962CAB8488A /* PerformanceBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB3AA18E176A9CB9C245D2BE /* PerformanceBudgetTests.swift */; };
 		F3CB7546DDD5095F96BB7C40 /* ProtectionRulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B814E42E9F50B9A6910171DD /* ProtectionRulesView.swift */; };
@@ -63,13 +57,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		33846F242C4627BE09635B7C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75937218E4D02AA8DAD7B24F /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 38F77BD9E5FDBF4CA68C8115;
-			remoteInfo = SpruceMyMacHelper;
-		};
 		B385F4F1FC4D708343E5910F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75937218E4D02AA8DAD7B24F /* Project object */;
@@ -84,18 +71,15 @@
 		0BD18B700607B0FD4E922620 /* UserCacheScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCacheScanner.swift; sourceTree = "<group>"; };
 		17369F85710118F29BF4194F /* AnalyzedFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzedFile.swift; sourceTree = "<group>"; };
 		1C9BF0B763E62A41FA448E67 /* SpaceAnalyzerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceAnalyzerTests.swift; sourceTree = "<group>"; };
-		29902F6717D800EC1FAD3B8B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		355BF5E527BF4CB0770ADA9F /* SystemMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMaintenanceView.swift; sourceTree = "<group>"; };
 		3E5FC5FFAF15DCBF4D21A676 /* SpruceMyMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpruceMyMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E7B5724DC4504DD04E9F437 /* FixedCommandRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedCommandRunner.swift; sourceTree = "<group>"; };
 		40BD57AB840F1B7391DF8F45 /* InstalledApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledApplication.swift; sourceTree = "<group>"; };
 		528D0B98015C62ABB298A6F3 /* CleanupCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupCandidate.swift; sourceTree = "<group>"; };
 		5B7332339D83F656F4E6DF53 /* CleanupPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupPlan.swift; sourceTree = "<group>"; };
 		5D329BFBF47D57AA1AE3F21F /* ToolPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolPlanView.swift; sourceTree = "<group>"; };
 		5E28AB5AF495684E63F4ACA2 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		5E7B3A828CBDDC6B0FAB475E /* PrivilegedHelperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperManager.swift; sourceTree = "<group>"; };
+		69BF78464654FB9B99022CC6 /* SystemMaintenanceCommandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMaintenanceCommandTests.swift; sourceTree = "<group>"; };
 		6AD42C293C3AD04DF370AC53 /* FileFingerprint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileFingerprint.swift; sourceTree = "<group>"; };
-		6E62C05BD1F3DBEE9E1A80A3 /* PrivilegedHelperService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperService.swift; sourceTree = "<group>"; };
 		6F2A95CC36836615247CDEFA /* NDJSONEventDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NDJSONEventDecoder.swift; sourceTree = "<group>"; };
 		79CA37BEF269C54A557D4C95 /* CleanupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupView.swift; sourceTree = "<group>"; };
 		7D83EEDD2BC62A1ADFCE848D /* ApplicationUninstallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationUninstallView.swift; sourceTree = "<group>"; };
@@ -104,7 +88,6 @@
 		86815E15EF0EF85DE459D7EC /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		8CA7F270ECEDDDBF9755FB07 /* ProtectionRuleStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectionRuleStoreTests.swift; sourceTree = "<group>"; };
 		8EBF8014962E9D2BE2E4BBFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9C6CFFA5DFC176423A473387 /* SpruceMyMacHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = SpruceMyMacHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C8D79B27B06912D30253DC8 /* EngineEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineEvent.swift; sourceTree = "<group>"; };
 		9CCC6FEE42A705C718B246D8 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		9E1E72273F5E7536EA409971 /* ToolboxOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolboxOverviewView.swift; sourceTree = "<group>"; };
@@ -113,7 +96,6 @@
 		AD3120CD40B568CC17A272D9 /* CleanupHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupHistory.swift; sourceTree = "<group>"; };
 		AE7B148534997DD3A756A0A4 /* ProtectionRuleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectionRuleStore.swift; sourceTree = "<group>"; };
 		B65EF1A1DEF6DFC72A06D322 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
-		B750BC0A3F16130783959262 /* PrivilegedHelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperProtocol.swift; sourceTree = "<group>"; };
 		B814E42E9F50B9A6910171DD /* ProtectionRulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectionRulesView.swift; sourceTree = "<group>"; };
 		B8D263E7033259A0621E7528 /* ApplicationIconCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationIconCache.swift; sourceTree = "<group>"; };
 		B901EB3662F528864C680916 /* CleanupPlanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupPlanTests.swift; sourceTree = "<group>"; };
@@ -132,7 +114,6 @@
 		F2FBE5A7D15BE493BC4934DD /* SpruceTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpruceTheme.swift; sourceTree = "<group>"; };
 		F3BD4EA97D89167F61C37143 /* SpruceMyMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpruceMyMacApp.swift; sourceTree = "<group>"; };
 		F482A6828DB0BB6C06A93DF5 /* ToolboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolboxView.swift; sourceTree = "<group>"; };
-		F4AE6A16DE2CE50A6DA766BE /* PrivilegedHelperProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelperProtocolTests.swift; sourceTree = "<group>"; };
 		FB3AA18E176A9CB9C245D2BE /* PerformanceBudgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceBudgetTests.swift; sourceTree = "<group>"; };
 		FD4B4ADBC5E7EDF4A43AFE27 /* EngineEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineEventTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -171,7 +152,6 @@
 				F92461A10A0D3264A7C8797C /* Cleanup */,
 				B66BBA926FAA36CCA05E3CE8 /* Engine */,
 				CAC0442099CFFC8A1DC6F59C /* History */,
-				8FE800E7B81A7A0AB3C96CFA /* Privileged */,
 				8454F60D32BC7C347ADC96A7 /* Protection */,
 				1CA57F6A723516ABBC736A9D /* System */,
 			);
@@ -231,7 +211,6 @@
 			isa = PBXGroup;
 			children = (
 				3E5FC5FFAF15DCBF4D21A676 /* SpruceMyMac.app */,
-				9C6CFFA5DFC176423A473387 /* SpruceMyMacHelper */,
 				A3CA9C0531FE40670A01A672 /* SpruceMyMacTests.xctest */,
 			);
 			name = Products;
@@ -275,16 +254,6 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		6B90542CEFAAE91EBF77B4F2 /* Helper */ = {
-			isa = PBXGroup;
-			children = (
-				3E7B5724DC4504DD04E9F437 /* FixedCommandRunner.swift */,
-				29902F6717D800EC1FAD3B8B /* main.swift */,
-				6E62C05BD1F3DBEE9E1A80A3 /* PrivilegedHelperService.swift */,
-			);
-			path = Helper;
-			sourceTree = "<group>";
-		};
 		7FAE244A731D25A8828EBC4D /* Applications */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,14 +271,6 @@
 			path = Protection;
 			sourceTree = "<group>";
 		};
-		8FE800E7B81A7A0AB3C96CFA /* Privileged */ = {
-			isa = PBXGroup;
-			children = (
-				5E7B3A828CBDDC6B0FAB475E /* PrivilegedHelperManager.swift */,
-			);
-			path = Privileged;
-			sourceTree = "<group>";
-		};
 		9EA6C4BA797AE06D6FC3DFD4 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -319,9 +280,9 @@
 				BD1730641D9F97B83F443855 /* LocalizationResourceTests.swift */,
 				BCE501F802259D1288750BED /* MoleBridgeTests.swift */,
 				FB3AA18E176A9CB9C245D2BE /* PerformanceBudgetTests.swift */,
-				F4AE6A16DE2CE50A6DA766BE /* PrivilegedHelperProtocolTests.swift */,
 				8CA7F270ECEDDDBF9755FB07 /* ProtectionRuleStoreTests.swift */,
 				1C9BF0B763E62A41FA448E67 /* SpaceAnalyzerTests.swift */,
+				69BF78464654FB9B99022CC6 /* SystemMaintenanceCommandTests.swift */,
 				C03ED018F84C75024DE74BC1 /* SystemSnapshotTests.swift */,
 			);
 			path = Tests;
@@ -333,14 +294,6 @@
 				9CCC6FEE42A705C718B246D8 /* DashboardView.swift */,
 			);
 			path = Dashboard;
-			sourceTree = "<group>";
-		};
-		B65C5A6A266CED236FB369F9 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				B750BC0A3F16130783959262 /* PrivilegedHelperProtocol.swift */,
-			);
-			path = Shared;
 			sourceTree = "<group>";
 		};
 		B66BBA926FAA36CCA05E3CE8 /* Engine */ = {
@@ -357,8 +310,6 @@
 			isa = PBXGroup;
 			children = (
 				0976015318334176400F70A7 /* App */,
-				6B90542CEFAAE91EBF77B4F2 /* Helper */,
-				B65C5A6A266CED236FB369F9 /* Shared */,
 				9EA6C4BA797AE06D6FC3DFD4 /* Tests */,
 				38DA929E50DDD74EC78D4321 /* Products */,
 			);
@@ -386,23 +337,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		38F77BD9E5FDBF4CA68C8115 /* SpruceMyMacHelper */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E0777756B6DEE701323DB10B /* Build configuration list for PBXNativeTarget "SpruceMyMacHelper" */;
-			buildPhases = (
-				A1014E2ED5F74663DAB61D85 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = SpruceMyMacHelper;
-			packageProductDependencies = (
-			);
-			productName = SpruceMyMacHelper;
-			productReference = 9C6CFFA5DFC176423A473387 /* SpruceMyMacHelper */;
-			productType = "com.apple.product-type.tool";
-		};
 		A5925DD79675A9CD88A9C3E3 /* SpruceMyMac */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67A2F8D05192EB059E67E22E /* Build configuration list for PBXNativeTarget "SpruceMyMac" */;
@@ -410,13 +344,11 @@
 				4F11344AB51FA847128D2091 /* Sources */,
 				6D88B787EE6E32CAE8C13870 /* Resources */,
 				240EDF5709BFDB973A0F15B9 /* Embed legal documents */,
-				E853A75E0B16D56A83D0A974 /* Embed privileged helper */,
 				70F22E9E3638DDFD9F064173 /* Embed pinned Mole engine */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				83EF01B4CA2E5731925FB27C /* PBXTargetDependency */,
 			);
 			name = SpruceMyMac;
 			packageProductDependencies = (
@@ -452,9 +384,6 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					38F77BD9E5FDBF4CA68C8115 = {
-						ProvisioningStyle = Automatic;
-					};
 					A5925DD79675A9CD88A9C3E3 = {
 						ProvisioningStyle = Automatic;
 					};
@@ -476,7 +405,6 @@
 			projectRoot = "";
 			targets = (
 				A5925DD79675A9CD88A9C3E3 /* SpruceMyMac */,
-				38F77BD9E5FDBF4CA68C8115 /* SpruceMyMacHelper */,
 				E87CBCE1A125178C8D0465F6 /* SpruceMyMacTests */,
 			);
 		};
@@ -533,25 +461,6 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/bash\n# SPDX-License-Identifier: GPL-3.0-only\n\nset -euo pipefail\n\nROOT_DIR=\"${SRCROOT:-$(cd \"$(dirname \"${BASH_SOURCE[0]}\")/..\" && pwd)}\"\nSOURCE_DIR=\"$ROOT_DIR/Vendor/Mole\"\n\nif [[ -z \"${TARGET_BUILD_DIR:-}\" || -z \"${UNLOCALIZED_RESOURCES_FOLDER_PATH:-}\" ]]; then\n    echo \"embed-engine.sh must run from an Xcode build phase\" >&2\n    exit 1\nfi\n\nRESOURCES_DIR=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nDESTINATION_DIR=\"$RESOURCES_DIR/Engine/Mole\"\n\ncase \"$DESTINATION_DIR\" in\n    \"$TARGET_BUILD_DIR\"/*/Engine/Mole) ;;\n    *)\n        echo \"Refusing unsafe engine destination: $DESTINATION_DIR\" >&2\n        exit 1\n        ;;\nesac\n\nif [[ -e \"$DESTINATION_DIR\" ]]; then\n    /bin/rm -rf -- \"$DESTINATION_DIR\"\nfi\n\n\"$ROOT_DIR/Scripts/prepare-engine.sh\" \"$SOURCE_DIR\" \"$DESTINATION_DIR\"\n/usr/bin/install -m 644 \"$ROOT_DIR/Engine/UPSTREAM.json\" \"$RESOURCES_DIR/Engine/UPSTREAM.json\"\n";
 		};
-		E853A75E0B16D56A83D0A974 /* Embed privileged helper */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Embed privileged helper";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\n# SPDX-License-Identifier: GPL-3.0-only\n\nset -euo pipefail\n\nreadonly HELPER_NAME=\"sprucemymac-helper\"\nreadonly PLIST_NAME=\"com.van426326.sprucemymac.helper.plist\"\nreadonly APP_CONTENTS=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/Contents\"\nreadonly HELPER_SOURCE=\"${BUILT_PRODUCTS_DIR}/${HELPER_NAME}\"\nreadonly PLIST_SOURCE=\"${SRCROOT}/Helper/Resources/${PLIST_NAME}\"\nreadonly HELPER_DESTINATION=\"${APP_CONTENTS}/Library/HelperTools/${HELPER_NAME}\"\nreadonly PLIST_DESTINATION=\"${APP_CONTENTS}/Library/LaunchDaemons/${PLIST_NAME}\"\n\n[[ -x \"$HELPER_SOURCE\" ]] || {\n    echo \"error: built privileged helper is missing: $HELPER_SOURCE\" >&2\n    exit 1\n}\n[[ -f \"$PLIST_SOURCE\" && ! -L \"$PLIST_SOURCE\" ]] || {\n    echo \"error: LaunchDaemon plist is missing or unsafe: $PLIST_SOURCE\" >&2\n    exit 1\n}\n\n/bin/mkdir -p \"$(dirname \"$HELPER_DESTINATION\")\" \"$(dirname \"$PLIST_DESTINATION\")\"\n/usr/bin/install -m 755 \"$HELPER_SOURCE\" \"$HELPER_DESTINATION\"\n/usr/bin/install -m 644 \"$PLIST_SOURCE\" \"$PLIST_DESTINATION\"\n/usr/bin/plutil -lint \"$PLIST_DESTINATION\" > /dev/null\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -579,8 +488,6 @@
 				88DADF72B1D7E2F0B75B7CD0 /* MoleBridge.swift in Sources */,
 				F93A4A6101D35916A0EB8CF5 /* NDJSONEventDecoder.swift in Sources */,
 				39130FA18ABAE369667851C2 /* OperationHistoryView.swift in Sources */,
-				8FA10C5027E7F12657FAB172 /* PrivilegedHelperManager.swift in Sources */,
-				E151074C1B283481EBB515D0 /* PrivilegedHelperProtocol.swift in Sources */,
 				0BD8716D6A23B4C72B72FED4 /* ProtectionRuleStore.swift in Sources */,
 				F3CB7546DDD5095F96BB7C40 /* ProtectionRulesView.swift in Sources */,
 				1B6BC10EF339A36EA1EE8B4A /* QuickLookPresenter.swift in Sources */,
@@ -609,21 +516,10 @@
 				2502BED0F736750A1028DC8E /* LocalizationResourceTests.swift in Sources */,
 				0571169AA4D397D64B243047 /* MoleBridgeTests.swift in Sources */,
 				EA6D1BD938CAD962CAB8488A /* PerformanceBudgetTests.swift in Sources */,
-				443CB3B0790D4C34B0C0E97B /* PrivilegedHelperProtocolTests.swift in Sources */,
 				FCEFC438EC65B92FBC1000D4 /* ProtectionRuleStoreTests.swift in Sources */,
 				D5FFFAA2D49295401D402832 /* SpaceAnalyzerTests.swift in Sources */,
+				DBA5DEBFECF287295CF408E3 /* SystemMaintenanceCommandTests.swift in Sources */,
 				8DF47CB09513E0E2682FCF96 /* SystemSnapshotTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A1014E2ED5F74663DAB61D85 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A108FBD491D5E120EB9270B5 /* FixedCommandRunner.swift in Sources */,
-				9854BF0D5CA2F3F3D124415B /* PrivilegedHelperProtocol.swift in Sources */,
-				A894FCE2CE1A74329AA36768 /* PrivilegedHelperService.swift in Sources */,
-				93221DB895A3C6880A310B3D /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,33 +531,9 @@
 			target = A5925DD79675A9CD88A9C3E3 /* SpruceMyMac */;
 			targetProxy = B385F4F1FC4D708343E5910F /* PBXContainerItemProxy */;
 		};
-		83EF01B4CA2E5731925FB27C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 38F77BD9E5FDBF4CA68C8115 /* SpruceMyMacHelper */;
-			targetProxy = 33846F242C4627BE09635B7C /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		147AD30162D6F67EAE4711B6 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.van426326.sprucemymac.helper;
-				PRODUCT_NAME = "sprucemymac-helper";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
 		1FE727346315CA9AD5A2FAF3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -788,25 +660,6 @@
 			};
 			name = Release;
 		};
-		B273F71C6459067E39451AB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.van426326.sprucemymac.helper;
-				PRODUCT_NAME = "sprucemymac-helper";
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 		D47CD6D9E48492F6CF51823B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -905,15 +758,6 @@
 			buildConfigurations = (
 				1FE727346315CA9AD5A2FAF3 /* Debug */,
 				915A389CF7AED2B0E7638E13 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		E0777756B6DEE701323DB10B /* Build configuration list for PBXNativeTarget "SpruceMyMacHelper" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				147AD30162D6F67EAE4711B6 /* Debug */,
-				B273F71C6459067E39451AB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

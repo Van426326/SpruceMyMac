@@ -17,13 +17,13 @@ APP_PATH="${1:-}"
 
 CONTENTS="$APP_PATH/Contents"
 MAIN_EXECUTABLE="$CONTENTS/MacOS/SpruceMyMac"
-HELPER="$CONTENTS/Library/HelperTools/sprucemymac-helper"
-PLIST="$CONTENTS/Library/LaunchDaemons/com.van426326.sprucemymac.helper.plist"
 ENGINE="$CONTENTS/Resources/Engine/Mole/bin/gui.sh"
 ENGINE_METADATA="$CONTENTS/Resources/Engine/UPSTREAM.json"
 
-[[ -x "$MAIN_EXECUTABLE" && -x "$HELPER" && -x "$ENGINE" ]]
-[[ -f "$PLIST" && -f "$ENGINE_METADATA" ]]
+[[ -x "$MAIN_EXECUTABLE" && -x "$ENGINE" ]]
+[[ -f "$ENGINE_METADATA" ]]
+[[ ! -e "$CONTENTS/Library/HelperTools/sprucemymac-helper" ]]
+[[ ! -e "$CONTENTS/Library/LaunchDaemons/com.van426326.sprucemymac.helper.plist" ]]
 [[ -f "$CONTENTS/Resources/LICENSE" ]]
 [[ -f "$CONTENTS/Resources/NOTICE.md" ]]
 [[ -f "$CONTENTS/Resources/THIRD_PARTY_NOTICES.md" ]]
@@ -35,27 +35,19 @@ ENGINE_METADATA="$CONTENTS/Resources/Engine/UPSTREAM.json"
 /usr/bin/cmp -s "$ROOT_DIR/THIRD_PARTY_NOTICES.md" "$CONTENTS/Resources/THIRD_PARTY_NOTICES.md"
 
 main_arches=$(/usr/bin/lipo -archs "$MAIN_EXECUTABLE")
-helper_arches=$(/usr/bin/lipo -archs "$HELPER")
 for required_arch in arm64 x86_64; do
     [[ " $main_arches " == *" $required_arch "* ]]
-    [[ " $helper_arches " == *" $required_arch "* ]]
 done
 
 bundle_id=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$CONTENTS/Info.plist")
 [[ "$bundle_id" == "com.van426326.sprucemymac" ]]
-[[ "$(/usr/libexec/PlistBuddy -c 'Print :Label' "$PLIST")" == "com.van426326.sprucemymac.helper" ]]
 [[ "$(/usr/bin/jq -r .commit "$ENGINE_METADATA")" == \
     "$(/usr/bin/jq -r .commit "$ROOT_DIR/Engine/UPSTREAM.json")" ]]
-
-"$ROOT_DIR/Scripts/verify-helper.sh" "$APP_PATH"
 
 if [[ "$UNSIGNED" == "false" ]]; then
     /usr/bin/codesign --verify --deep --strict --verbose=2 "$APP_PATH"
     signature_info=$(/usr/bin/codesign -dvvv "$APP_PATH" 2>&1)
-    helper_signature_info=$(/usr/bin/codesign -dvvv "$HELPER" 2>&1)
     [[ "$signature_info" == *"runtime"* && "$signature_info" != *"Signature=adhoc"* ]]
-    [[ "$helper_signature_info" == *"Identifier=com.van426326.sprucemymac.helper"* ]]
-    [[ "$helper_signature_info" == *"runtime"* && "$helper_signature_info" != *"Signature=adhoc"* ]]
     /usr/sbin/spctl --assess --type execute --verbose=2 "$APP_PATH"
 fi
 

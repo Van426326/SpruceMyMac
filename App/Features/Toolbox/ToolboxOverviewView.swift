@@ -27,10 +27,10 @@ struct ToolboxOverviewView: View {
 
                 ToolActionCard(
                     title: String(localized: "系统维护"),
-                    detail: String(localized: "通过受限 Helper 刷新 DNS 缓存或重建 Spotlight 索引"),
+                    detail: String(localized: "显示并复制固定的 DNS 与 Spotlight 维护命令"),
                     symbol: "wrench.and.screwdriver",
                     color: .blue,
-                    actionTitle: String(localized: "管理")
+                    actionTitle: String(localized: "查看命令")
                 ) { showsSystemMaintenance = true }
             }
             .padding(28)

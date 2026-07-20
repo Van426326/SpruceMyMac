@@ -20,11 +20,11 @@ communicates through a versioned NDJSON protocol.
 ```bash
 xcodegen generate
 xcodebuild -project SpruceMyMac.xcodeproj -scheme SpruceMyMac -configuration Debug -derivedDataPath build build CODE_SIGNING_ALLOWED=NO
-Scripts/verify-helper.sh build/Build/Products/Debug/SpruceMyMac.app
 ```
 
-Unsigned builds are suitable for tests and UI development, but macOS will not
-register their LaunchDaemon.
+Unsigned builds are suitable for local use and GitHub community distribution.
+Users may need to right-click the app and choose Open because the build is not
+notarized.
 
 Run all checks and create an unsigned Universal 2 validation build with:
 
@@ -79,20 +79,14 @@ All apply operations accept opaque candidate IDs only, revalidate the complete
 selection before moving anything, atomically consume the plan to prevent
 replay, and route removals through Mole's Trash deletion funnel.
 
-## Privileged system maintenance
+## System maintenance commands
 
-The app embeds a dedicated `sprucemymac-helper` LaunchDaemon for two compiled,
-fixed-argument tasks: refreshing the DNS cache and requesting a Spotlight index
-rebuild. The XPC connection validates designated code-signing requirements in
-both directions and accepts only a task ID plus a UUID request ID. It never
-accepts arbitrary commands or paths; direct command-line task execution is
-rejected.
-
-Activation requires the app to be installed in `/Applications`, signed with
-the hardened runtime, notarized, registered through `SMAppService`, and
-approved by an administrator in System Settings. See
-[`Helper/SECURITY.md`](Helper/SECURITY.md) for the threat model and exact task
-catalog.
+The GitHub build does not install a privileged helper or persistent root
+service. Its system-command assistant displays two fixed, auditable commands
+for refreshing the DNS cache and requesting a Spotlight index rebuild. The app
+can copy a command and open Terminal, but it never runs `sudo`, reads an
+administrator password, or constructs a command from user input. The user
+reviews, pastes, and runs the command directly in Terminal.
 
 ## Independence notice
 

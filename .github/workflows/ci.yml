@@ -41,10 +41,9 @@ jobs:
           -derivedDataPath build/CIDerivedData
           test CODE_SIGNING_ALLOWED=NO
 
-      - name: Verify bundled engine and helper
+      - name: Verify bundled engine
         run: |
           APP=build/CIDerivedData/Build/Products/Debug/SpruceMyMac.app
-          Scripts/verify-helper.sh "$APP"
           Engine/Tests/gui_plan_test.sh "$APP/Contents/Resources/Engine/Mole"
 
       - name: Build unsigned Universal 2 release

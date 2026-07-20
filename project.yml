@@ -28,14 +28,10 @@ targets:
     platform: macOS
     sources:
       - path: App
-      - path: Shared
     resources:
       - path: LICENSE
       - path: NOTICE.md
       - path: THIRD_PARTY_NOTICES.md
-    dependencies:
-      - target: SpruceMyMacHelper
-        embed: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.van426326.sprucemymac
@@ -57,30 +53,9 @@ targets:
       - path: Scripts/embed-legal.sh
         name: Embed legal documents
         basedOnDependencyAnalysis: false
-      - path: Scripts/embed-helper.sh
-        name: Embed privileged helper
-        basedOnDependencyAnalysis: false
       - path: Scripts/embed-engine.sh
         name: Embed pinned Mole engine
         basedOnDependencyAnalysis: false
-  SpruceMyMacHelper:
-    type: tool
-    platform: macOS
-    sources:
-      - path: Helper
-        excludes:
-          - Resources
-          - SECURITY.md
-      - path: Shared
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.van426326.sprucemymac.helper
-        PRODUCT_NAME: sprucemymac-helper
-        GENERATE_INFOPLIST_FILE: YES
-        CREATE_INFOPLIST_SECTION_IN_BINARY: YES
-        ENABLE_HARDENED_RUNTIME: YES
-        CODE_SIGN_STYLE: Automatic
-        SKIP_INSTALL: YES
   SpruceMyMacTests:
     type: bundle.unit-test
     platform: macOS

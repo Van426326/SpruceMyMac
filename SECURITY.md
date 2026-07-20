@@ -1,7 +1,7 @@
 # Security policy
 
-SpruceMyMac handles filesystem cleanup and ships a restricted privileged
-helper, so security reports are treated as high priority.
+SpruceMyMac handles filesystem cleanup, so security reports are treated as
+high priority.
 
 ## Reporting a vulnerability
 
@@ -18,5 +18,5 @@ Never include credentials, unrelated personal files, or destructive payloads.
 Until the first stable release, only the latest published version is supported.
 Security fixes will be documented in the changelog and release notes.
 
-The privileged-helper threat model and fixed task catalog are documented in
-[`Helper/SECURITY.md`](Helper/SECURITY.md).
+The system-command assistant never executes `sudo` or accepts dynamic command
+arguments. Users review and run its fixed commands directly in Terminal.
