@@ -23,14 +23,7 @@ final class LocalizationResourceTests: XCTestCase {
         )
     }
 
-    func testSimplifiedChineseSourceIsCompiledIntoApplicationBundle() throws {
-        XCTAssertEqual(
-            String(
-                localized: "概览",
-                bundle: .main,
-                locale: Locale(identifier: "zh-Hans")
-            ),
-            "概览"
-        )
+    func testSimplifiedChineseIsTheApplicationDevelopmentLanguage() {
+        XCTAssertEqual(Bundle.main.developmentLocalization, "zh-Hans")
     }
 }
