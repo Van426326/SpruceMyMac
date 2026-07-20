@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - name: Check out source and Mole
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Validate sources and localization
+        run: |
+          git diff --check
+          bash -n Scripts/*.sh Engine/Overlay/bin/gui.sh Engine/Tests/gui_plan_test.sh
+          Scripts/verify-localization.sh
+          test "$(git -C Vendor/Mole rev-parse HEAD)" = "$(jq -r .commit Engine/UPSTREAM.json)"
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Run Swift tests
+        run: >-
+          xcodebuild -quiet
+          -project SpruceMyMac.xcodeproj
+          -scheme SpruceMyMac
+          -configuration Debug
+          -derivedDataPath build/CIDerivedData
+          test CODE_SIGNING_ALLOWED=NO
+
+      - name: Verify bundled engine and helper
+        run: |
+          APP=build/CIDerivedData/Build/Products/Debug/SpruceMyMac.app
+          Scripts/verify-helper.sh "$APP"
+          Engine/Tests/gui_plan_test.sh "$APP/Contents/Resources/Engine/Mole"
+
+      - name: Build unsigned Universal 2 release
+        run: Scripts/build-release.sh --unsigned --output build/ci-release
+
+      - name: Verify DMG and corresponding source
+        run: |
+          Scripts/package-dmg.sh build/ci-release/SpruceMyMac.app build/ci-release/SpruceMyMac.dmg
+          hdiutil verify build/ci-release/SpruceMyMac.dmg
+          (cd build/ci-release && shasum -a 256 -c SpruceMyMac.dmg.sha256)
+          Scripts/source-archive.sh build/ci-release/SpruceMyMac-source.tar.gz
+          (cd build/ci-release && shasum -a 256 -c SpruceMyMac-source.tar.gz.sha256)
+          tar -tzf build/ci-release/SpruceMyMac-source.tar.gz | grep -q '^SpruceMyMac/Vendor/Mole/LICENSE$'
+          tar -tzf build/ci-release/SpruceMyMac-source.tar.gz | grep -q '^SpruceMyMac/SOURCE-MANIFEST.json$'

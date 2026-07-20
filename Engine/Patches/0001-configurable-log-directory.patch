@@ -1,0 +1,11 @@
+diff --git a/lib/core/log.sh b/lib/core/log.sh
+--- a/lib/core/log.sh
++++ b/lib/core/log.sh
+@@ -24,3 +24,4 @@
+-readonly LOG_FILE="${HOME}/Library/Logs/mole/mole.log"
+-readonly DEBUG_LOG_FILE="${HOME}/Library/Logs/mole/mole_debug_session.log"
+-readonly OPERATIONS_LOG_FILE="${HOME}/Library/Logs/mole/operations.log"
++readonly MOLE_LOG_DIR="${MOLE_LOG_DIR:-${HOME}/Library/Logs/mole}"
++readonly LOG_FILE="${MOLE_LOG_DIR}/mole.log"
++readonly DEBUG_LOG_FILE="${MOLE_LOG_DIR}/mole_debug_session.log"
++readonly OPERATIONS_LOG_FILE="${MOLE_LOG_DIR}/operations.log"

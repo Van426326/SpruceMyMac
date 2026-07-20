@@ -1,0 +1,3 @@
+[submodule "Vendor/Mole"]
+	path = Vendor/Mole
+	url = https://github.com/tw93/Mole.git
