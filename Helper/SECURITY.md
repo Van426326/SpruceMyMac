@@ -27,6 +27,14 @@ the hardened runtime and notarized. An unsigned development build can compile,
 run the nonprivileged UI, and execute the helper's inert self-test, but it is
 not a valid installation artifact.
 
+An `Apple Development` certificate from a Personal Team is also insufficient
+for this system LaunchDaemon. macOS may register the service record but AMFI
+will reject the helper with `no eligible provisioning profiles found`. The app
+therefore verifies the `notarized` code requirement before offering Helper
+registration. The XPC client also uses a five-second handshake deadline,
+connection interruption handlers, and bounded task-response deadlines so a
+rejected or crashed helper cannot leave the UI waiting indefinitely.
+
 ## Request protocol
 
 The XPC protocol accepts exactly two strings: a task ID and a UUID request ID.

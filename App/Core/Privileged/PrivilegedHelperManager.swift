@@ -31,11 +31,13 @@ enum PrivilegedHelperState: Equatable, Sendable {
 
 enum PrivilegedHelperManagerError: LocalizedError {
     case applicationMustBeInstalled
+    case applicationMustBeNotarized
     case missingComponents
 
     var errorDescription: String? {
         switch self {
         case .applicationMustBeInstalled: String(localized: "请先将 SpruceMyMac 移到 /Applications，再安装系统 Helper。")
+        case .applicationMustBeNotarized: String(localized: "系统 Helper 需要 Developer ID 签名并经过 Apple 公证的 SpruceMyMac。")
         case .missingComponents: String(localized: "应用包中的 Helper 或 LaunchDaemon 配置不完整。")
         }
     }
@@ -64,6 +66,12 @@ final class PrivilegedReplyGate: @unchecked Sendable {
         connection?.invalidate()
         continuation.resume(with: result)
     }
+
+    var isPending: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return continuation != nil
+    }
 }
 
 struct PrivilegedHelperClient: Sendable {
@@ -86,6 +94,12 @@ struct PrivilegedHelperClient: Sendable {
                     with: SprucePrivilegedHelperProtocol.self
                 )
                 connection.setCodeSigningRequirement(helperRequirement)
+                connection.interruptionHandler = {
+                    gate.finish(.failure(PrivilegedHelperError.connectionInterrupted))
+                }
+                connection.invalidationHandler = {
+                    gate.finish(.failure(PrivilegedHelperError.connectionInterrupted))
+                }
                 connection.activate()
 
                 guard let proxy = connection.remoteObjectProxyWithErrorHandler({ error in
@@ -95,22 +109,48 @@ struct PrivilegedHelperClient: Sendable {
                     return
                 }
 
-                proxy.runTask(
-                    task.rawValue,
-                    requestIdentifier: requestIdentifier
-                ) { dictionary, error in
-                    do {
-                        guard let dictionary else {
-                            throw error ?? PrivilegedHelperError.invalidResponse
+                let connectionTimeout = DispatchWorkItem {
+                    gate.finish(.failure(PrivilegedHelperError.connectionTimedOut))
+                }
+                DispatchQueue.global(qos: .utility).asyncAfter(
+                    deadline: .now() + .seconds(5),
+                    execute: connectionTimeout
+                )
+
+                proxy.helperVersion { version in
+                    connectionTimeout.cancel()
+                    guard gate.isPending else { return }
+                    guard version == SprucePrivilegedHelperConstants.protocolVersion else {
+                        gate.finish(.failure(PrivilegedHelperError.invalidResponse))
+                        return
+                    }
+
+                    let responseTimeout = DispatchWorkItem {
+                        gate.finish(.failure(PrivilegedHelperError.responseTimedOut))
+                    }
+                    DispatchQueue.global(qos: .utility).asyncAfter(
+                        deadline: .now() + .seconds(task.responseTimeoutSeconds),
+                        execute: responseTimeout
+                    )
+
+                    proxy.runTask(
+                        task.rawValue,
+                        requestIdentifier: requestIdentifier
+                    ) { dictionary, error in
+                        responseTimeout.cancel()
+                        do {
+                            guard let dictionary else {
+                                throw error ?? PrivilegedHelperError.invalidResponse
+                            }
+                            let result = try MaintenanceTaskResult(dictionary: dictionary)
+                            guard result.requestIdentifier == requestIdentifier,
+                                  result.taskIdentifier == task.rawValue else {
+                                throw PrivilegedHelperError.mismatchedResponse
+                            }
+                            gate.finish(.success(result))
+                        } catch {
+                            gate.finish(.failure(error))
                         }
-                        let result = try MaintenanceTaskResult(dictionary: dictionary)
-                        guard result.requestIdentifier == requestIdentifier,
-                              result.taskIdentifier == task.rawValue else {
-                            throw PrivilegedHelperError.mismatchedResponse
-                        }
-                        gate.finish(.success(result))
-                    } catch {
-                        gate.finish(.failure(error))
                     }
                 }
             } catch {
@@ -136,6 +176,13 @@ final class PrivilegedHelperManager: ObservableObject {
     var applicationIsInstalled: Bool {
         let path = Bundle.main.bundleURL.resolvingSymlinksInPath().path
         return path == "/Applications/SpruceMyMac.app" || path.hasPrefix("/Applications/")
+    }
+
+    var applicationIsNotarized: Bool {
+        CodeSigningRequirementReader.satisfies(
+            requirement: "notarized",
+            for: Bundle.main.bundleURL
+        )
     }
 
     var helperExecutableURL: URL {
@@ -166,6 +213,10 @@ final class PrivilegedHelperManager: ObservableObject {
     func register() {
         guard applicationIsInstalled else {
             errorMessage = PrivilegedHelperManagerError.applicationMustBeInstalled.localizedDescription
+            return
+        }
+        guard applicationIsNotarized else {
+            errorMessage = PrivilegedHelperManagerError.applicationMustBeNotarized.localizedDescription
             return
         }
         guard bundledComponentsAvailable else {

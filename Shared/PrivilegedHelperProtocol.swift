@@ -58,6 +58,15 @@ enum SystemMaintenanceTask: String, CaseIterable, Identifiable, Sendable {
         case .rebuildSpotlightIndex: .review
         }
     }
+
+    var responseTimeoutSeconds: Int {
+        guard let definition = SystemMaintenanceTaskCatalog.definition(for: rawValue) else {
+            return 45
+        }
+        return definition.commands.reduce(5) { total, command in
+            total + command.timeoutSeconds + 3
+        }
+    }
 }
 
 enum MaintenanceTaskRisk: String, Sendable {
@@ -182,6 +191,9 @@ enum PrivilegedHelperError: LocalizedError {
     case invalidResponse
     case mismatchedResponse
     case connectionFailed(String)
+    case connectionTimedOut
+    case connectionInterrupted
+    case responseTimedOut
     case serviceUnavailable
 
     var errorDescription: String? {
@@ -192,12 +204,39 @@ enum PrivilegedHelperError: LocalizedError {
         case .invalidResponse: String(localized: "Helper 返回了无效响应")
         case .mismatchedResponse: String(localized: "Helper 响应与请求不匹配")
         case let .connectionFailed(message): String(localized: "无法连接 Helper：\(message)")
+        case .connectionTimedOut: String(localized: "Helper 连接超时；请检查签名、公证和系统批准状态。")
+        case .connectionInterrupted: String(localized: "Helper 连接已中断。")
+        case .responseTimedOut: String(localized: "Helper 任务超时，连接已安全关闭。")
         case .serviceUnavailable: String(localized: "Helper 尚未启用或未获系统批准")
         }
     }
 }
 
 enum CodeSigningRequirementReader {
+    static func satisfies(requirement requirementString: String, for url: URL) -> Bool {
+        var staticCode: SecStaticCode?
+        guard SecStaticCodeCreateWithPath(url as CFURL, [], &staticCode) == errSecSuccess,
+              let staticCode else {
+            return false
+        }
+
+        var requirement: SecRequirement?
+        guard SecRequirementCreateWithString(
+            requirementString as CFString,
+            [],
+            &requirement
+        ) == errSecSuccess,
+        let requirement else {
+            return false
+        }
+
+        return SecStaticCodeCheckValidity(
+            staticCode,
+            SecCSFlags(rawValue: UInt32(kSecCSCheckAllArchitectures)),
+            requirement
+        ) == errSecSuccess
+    }
+
     static func designatedRequirement(for url: URL) throws -> String {
         var staticCode: SecStaticCode?
         var status = SecStaticCodeCreateWithPath(url as CFURL, [], &staticCode)

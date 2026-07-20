@@ -92,6 +92,10 @@ struct SystemMaintenanceView: View {
                 Label("正式启用前请将应用移到 /Applications。", systemImage: "folder.badge.questionmark")
                     .font(.callout)
                     .foregroundStyle(.orange)
+            } else if !manager.applicationIsNotarized {
+                Label("系统 Helper 需要 Developer ID 签名并经过 Apple 公证。", systemImage: "signature")
+                    .font(.callout)
+                    .foregroundStyle(.orange)
             } else if !manager.bundledComponentsAvailable {
                 Label("应用包中的 Helper 组件不完整。", systemImage: "exclamationmark.triangle")
                     .font(.callout)
@@ -108,7 +112,7 @@ struct SystemMaintenanceView: View {
         case .notRegistered:
             Button("安装 Helper") { manager.register() }
                 .buttonStyle(.borderedProminent)
-                .disabled(!manager.applicationIsInstalled || manager.isWorking)
+                .disabled(!manager.applicationIsInstalled || !manager.applicationIsNotarized || manager.isWorking)
         case .requiresApproval:
             Button("打开系统设置") { manager.openApprovalSettings() }
                 .buttonStyle(.borderedProminent)
@@ -116,7 +120,12 @@ struct SystemMaintenanceView: View {
             Button("移除…") { confirmsUnregister = true }
                 .disabled(manager.isWorking)
         case .notFound:
-            Button("刷新") { manager.refresh() }
+            Button("安装 Helper") { manager.register() }
+                .buttonStyle(.borderedProminent)
+                .disabled(
+                    !manager.applicationIsInstalled || !manager.applicationIsNotarized ||
+                    !manager.bundledComponentsAvailable || manager.isWorking
+                )
         }
     }
 
@@ -185,6 +194,7 @@ struct SystemMaintenanceView: View {
 
     private var serviceStateTitle: String {
         if !manager.applicationIsInstalled { return String(localized: "等待放入 /Applications") }
+        if !manager.applicationIsNotarized { return String(localized: "需要公证版本") }
         if !manager.bundledComponentsAvailable { return String(localized: "组件不完整") }
         return manager.state.title
     }

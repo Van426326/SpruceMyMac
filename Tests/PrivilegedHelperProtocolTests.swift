@@ -50,6 +50,9 @@ final class PrivilegedHelperProtocolTests: XCTestCase {
                 timeoutSeconds: 30
             )
         ])
+
+        XCTAssertEqual(SystemMaintenanceTask.flushDNSCache.responseTimeoutSeconds, 31)
+        XCTAssertEqual(SystemMaintenanceTask.rebuildSpotlightIndex.responseTimeoutSeconds, 38)
     }
 
     func testValidatorRejectsUnknownTasksAndMalformedRequestIDs() throws {
@@ -61,6 +64,15 @@ final class PrivilegedHelperProtocolTests: XCTestCase {
         XCTAssertEqual(
             PrivilegedRequestValidator.canonicalRequestIdentifier(identifier),
             identifier
+        )
+    }
+
+    func testUnsignedTestHostDoesNotSatisfyNotarizationRequirement() {
+        XCTAssertFalse(
+            CodeSigningRequirementReader.satisfies(
+                requirement: "notarized",
+                for: Bundle.main.bundleURL
+            )
         )
     }
 

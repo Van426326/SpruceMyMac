@@ -15,7 +15,18 @@ private func printSelfTestManifest() {
 }
 
 private func containingApplicationURL() -> URL? {
-    var url = URL(fileURLWithPath: CommandLine.arguments[0]).standardizedFileURL
+    var bufferSize: UInt32 = 0
+    _ = _NSGetExecutablePath(nil, &bufferSize)
+    var buffer = [CChar](repeating: 0, count: Int(bufferSize))
+    guard _NSGetExecutablePath(&buffer, &bufferSize) == 0 else { return nil }
+
+    let executablePath = String(
+        decoding: buffer.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) },
+        as: UTF8.self
+    )
+    var url = URL(fileURLWithPath: executablePath)
+        .resolvingSymlinksInPath()
+        .standardizedFileURL
     for _ in 0..<4 {
         url.deleteLastPathComponent()
     }
