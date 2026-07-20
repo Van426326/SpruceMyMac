@@ -34,7 +34,6 @@ ENGINE_METADATA="$CONTENTS/Resources/Engine/UPSTREAM.json"
 [[ -f "$CONTENTS/Resources/THIRD_PARTY_NOTICES.md" ]]
 [[ -f "$CONTENTS/Resources/AppIcon.icns" || -f "$CONTENTS/Resources/Assets.car" ]]
 [[ -f "$CONTENTS/Resources/en.lproj/Localizable.strings" ]]
-[[ -f "$CONTENTS/Resources/zh-Hans.lproj/Localizable.strings" ]]
 /usr/bin/cmp -s "$ROOT_DIR/LICENSE" "$CONTENTS/Resources/LICENSE"
 /usr/bin/cmp -s "$ROOT_DIR/NOTICE.md" "$CONTENTS/Resources/NOTICE.md"
 /usr/bin/cmp -s "$ROOT_DIR/THIRD_PARTY_NOTICES.md" "$CONTENTS/Resources/THIRD_PARTY_NOTICES.md"
@@ -46,6 +45,8 @@ done
 
 bundle_id=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$CONTENTS/Info.plist")
 [[ "$bundle_id" == "com.van426326.sprucemymac" ]]
+development_region=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDevelopmentRegion' "$CONTENTS/Info.plist")
+[[ "$development_region" == "zh-Hans" ]]
 [[ "$("$JQ_BIN" -r .commit "$ENGINE_METADATA")" == \
     "$("$JQ_BIN" -r .commit "$ROOT_DIR/Engine/UPSTREAM.json")" ]]
 

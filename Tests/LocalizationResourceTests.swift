@@ -24,12 +24,12 @@ final class LocalizationResourceTests: XCTestCase {
     }
 
     func testSimplifiedChineseSourceIsCompiledIntoApplicationBundle() throws {
-        let resources = try XCTUnwrap(Bundle.main.resourceURL)
-        let chineseURL = resources.appendingPathComponent("zh-Hans.lproj", isDirectory: true)
-        let chineseBundle = try XCTUnwrap(Bundle(url: chineseURL))
-
         XCTAssertEqual(
-            chineseBundle.localizedString(forKey: "概览", value: nil, table: nil),
+            String(
+                localized: "概览",
+                bundle: .main,
+                locale: Locale(identifier: "zh-Hans")
+            ),
             "概览"
         )
     }
