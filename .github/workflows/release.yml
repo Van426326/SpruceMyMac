@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: macos-15
+    timeout-minutes: 40
+    steps:
+      - name: Check out tagged source and Mole
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Validate version tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PROJECT_VERSION="$(awk '/MARKETING_VERSION:/ {print $2; exit}' project.yml)"
+          test "$TAG_VERSION" = "$PROJECT_VERSION"
+
+      - name: Validate sources and localization
+        run: |
+          git diff --check
+          bash -n Scripts/*.sh Engine/Overlay/bin/gui.sh Engine/Tests/gui_plan_test.sh
+          Scripts/verify-localization.sh
+          test "$(git -C Vendor/Mole rev-parse HEAD)" = "$(jq -r .commit Engine/UPSTREAM.json)"
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Run Swift tests
+        run: >-
+          xcodebuild -quiet
+          -project SpruceMyMac.xcodeproj
+          -scheme SpruceMyMac
+          -configuration Debug
+          -derivedDataPath build/ReleaseTests
+          test CODE_SIGNING_ALLOWED=NO
+
+      - name: Build unsigned Universal 2 release
+        run: Scripts/build-release.sh --unsigned --output build/release
+
+      - name: Package and verify release files
+        run: |
+          Scripts/package-dmg.sh build/release/SpruceMyMac.app build/release/SpruceMyMac.dmg
+          hdiutil verify build/release/SpruceMyMac.dmg
+          (cd build/release && shasum -a 256 -c SpruceMyMac.dmg.sha256)
+          Scripts/source-archive.sh build/release/SpruceMyMac-source.tar.gz
+          (cd build/release && shasum -a 256 -c SpruceMyMac-source.tar.gz.sha256)
+          tar -tzf build/release/SpruceMyMac-source.tar.gz | grep -q '^SpruceMyMac/Vendor/Mole/LICENSE$'
+          tar -tzf build/release/SpruceMyMac-source.tar.gz | grep -q '^SpruceMyMac/SOURCE-MANIFEST.json$'
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            build/release/SpruceMyMac.dmg \
+            build/release/SpruceMyMac.dmg.sha256 \
+            build/release/SpruceMyMac-source.tar.gz \
+            build/release/SpruceMyMac-source.tar.gz.sha256 \
+            --verify-tag \
+            --latest \
+            --title "SpruceMyMac ${GITHUB_REF_NAME#v}" \
+            --generate-notes \
+            --notes "Unsigned Universal 2 community build for macOS 14 or newer. It contains no privileged helper. On first launch, Control-click SpruceMyMac.app and choose Open if macOS blocks a normal double-click."

@@ -3,7 +3,7 @@
 All notable changes to SpruceMyMac are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
-## 0.1.0 - Unreleased
+## 0.1.0 - 2026-07-20
 
 ### Added
 

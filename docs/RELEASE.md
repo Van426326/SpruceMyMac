@@ -8,9 +8,8 @@ the pinned Mole source, licenses, checksums, and build instructions.
 
 - Xcode 16 or newer
 - XcodeGen
-- A `Developer ID Application` certificate
-- An Apple Developer Team ID
-- A notarytool keychain profile
+- For signed releases only: a `Developer ID Application` certificate, Apple
+  Developer Team ID, and notarytool keychain profile
 
 Store notarization credentials in the login keychain, never in the repository:
 
@@ -75,6 +74,12 @@ Publish together:
 - `SpruceMyMac-source.tar.gz`
 - `SpruceMyMac-source.tar.gz.sha256`
 - release notes for the matching tag
+
+Pushing a version tag such as `v0.1.0` runs
+`.github/workflows/release.yml`. It validates that the tag matches
+`MARKETING_VERSION`, runs the tests, builds the unsigned Universal 2 app,
+verifies the DMG and source archive, and uploads all four files to a GitHub
+Release. The repository must allow GitHub Actions to write repository contents.
 
 ## Manual acceptance
 

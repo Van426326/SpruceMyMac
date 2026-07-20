@@ -5,7 +5,7 @@ SpruceMyMac is an independent, open-source macOS cleanup and storage-inspection 
 The current build provides the native app shell, live system storage and memory
 metrics, immutable cleanup plans, recoverable Trash execution, application
 uninstall, progressive space analysis, fixed-scope tools, operation history,
-user-managed protection rules, and a signed-XPC design for fixed system
+user-managed protection rules, and a system-command assistant for fixed system
 maintenance tasks. The bundled engine is based on a pinned Mole revision and
 communicates through a versioned NDJSON protocol.
 
@@ -14,6 +14,17 @@ communicates through a versioned NDJSON protocol.
 - macOS 14 or newer
 - Xcode 16 or newer
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+
+## Download
+
+Download the latest `SpruceMyMac.dmg` from
+[GitHub Releases](https://github.com/Van426326/SpruceMyMac/releases/latest).
+The community build is unsigned and supports both Apple silicon and Intel Macs.
+After dragging the app to `/Applications`, the first launch may require
+Control-clicking the app, choosing **Open**, and confirming once.
+
+SHA-256 checksum files and the complete corresponding GPL source archive are
+published beside every DMG.
 
 ## Build
 
