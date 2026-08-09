@@ -3,6 +3,21 @@
 All notable changes to SpruceMyMac are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## 0.2.0 - 2026-08-09
+
+### Added
+
+- Manual in-app updates for SpruceMyMac-signed Mole engine packages.
+- Versioned active, previous, and bundled engine resolution with safe rollback.
+- Engine compatibility, capability, architecture, App-build, and anti-downgrade checks.
+- Deterministic signed engine releases with matching GPL corresponding-source assets.
+
+### Changed
+
+- Destructive engine execution now preserves terminal partial results and is never
+  automatically retried after launch.
+- Read-only Mole operations use race-safe, operation-specific cancellation.
+
 ## 0.1.0 - 2026-07-20
 
 ### Added
