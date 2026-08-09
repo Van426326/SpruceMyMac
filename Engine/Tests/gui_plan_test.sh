@@ -9,6 +9,23 @@ if [[ $# -ne 1 ]]; then
 fi
 
 engine_root="$1"
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+expected_engine_version=$(jq -r .engineVersion "$root_dir/Engine/UPSTREAM.json")
+expected_upstream_commit=$(jq -r .commit "$root_dir/Engine/UPSTREAM.json")
+engine_info_home=$(mktemp -d "/private/tmp/sprucemymac-engine-info-test.XXXXXX")
+engine_info="$(HOME="$engine_info_home" "$engine_root/bin/gui.sh" engine-info --format json)"
+test -z "$(find "$engine_info_home" -mindepth 1 -print -quit)"
+/bin/rm -rf "$engine_info_home"
+printf '%s\n' "$engine_info" | jq -e \
+    --arg version "$expected_engine_version" \
+    --arg commit "$expected_upstream_commit" '
+    .schemaVersion == 1 and
+    .engineVersion == $version and
+    .commit == $commit and
+    (.protocolVersions | index(1)) != null and
+    (.capabilities | index("apply-plan")) != null
+' > /dev/null
+
 fixture_root=$(mktemp -d "/private/tmp/sprucemymac-engine-test.XXXXXX")
 mkdir -p "$fixture_root/Library/Caches/com.example.first"
 mkdir -p "$fixture_root/Library/Caches/com.example.empty"
@@ -59,6 +76,29 @@ replay_status=$?
 set -e
 test "$replay_status" -ne 0
 jq -e 'select(.type == "failed" and .code == "plan_not_found")' "$fixture_root/replay.ndjson" > /dev/null
+
+mkdir -p "$fixture_root/Library/Caches/com.example.identity-mismatch"
+printf 'identity fixture\n' > "$fixture_root/Library/Caches/com.example.identity-mismatch/cache.data"
+MOLE_TEST_MODE=1 MOLE_TEST_NO_AUTH=1 \
+    SPRUCE_ENGINE_TEST_HOME="$fixture_root" SPRUCE_ENGINE_STATE_DIR="$fixture_root/State" \
+    SPRUCE_ENGINE_LOG_DIR="$fixture_root/Logs" \
+    "$engine_root/bin/gui.sh" clean-plan --format ndjson --no-auth > "$fixture_root/identity-plan.ndjson"
+identity_plan_id=$(jq -r 'select(.type == "started") | .plan_id' "$fixture_root/identity-plan.ndjson")
+identity_candidate_id=$(jq -r 'select(.type == "candidate" and .name == "com.example.identity-mismatch") | .id' "$fixture_root/identity-plan.ndjson")
+identity_plan_file="$fixture_root/State/Plans/$identity_plan_id.plan"
+/usr/bin/sed -i '' $'s/^engine_version\\t.*/engine_version\\t9.9.9/' "$identity_plan_file"
+set +e
+MOLE_TEST_MODE=1 MOLE_TEST_NO_AUTH=1 MOLE_TEST_TRASH_DIR="$fixture_root/Trash" \
+    SPRUCE_ENGINE_TEST_HOME="$fixture_root" SPRUCE_ENGINE_STATE_DIR="$fixture_root/State" \
+    SPRUCE_ENGINE_LOG_DIR="$fixture_root/Logs" \
+    "$engine_root/bin/gui.sh" apply-plan --plan-id "$identity_plan_id" --items "$identity_candidate_id" \
+        --format ndjson --no-auth > "$fixture_root/identity-apply.ndjson"
+identity_status=$?
+set -e
+test "$identity_status" -ne 0
+jq -e 'select(.type == "failed" and .code == "engine_identity_mismatch")' "$fixture_root/identity-apply.ndjson" > /dev/null
+test -f "$fixture_root/Library/Caches/com.example.identity-mismatch/cache.data"
+rm -rf "$fixture_root/Library/Caches/com.example.identity-mismatch"
 
 mkdir -p "$fixture_root/Library/Caches/com.example.changed"
 printf 'original\n' > "$fixture_root/Library/Caches/com.example.changed/cache.data"
@@ -112,6 +152,20 @@ MOLE_TEST_MODE=1 \
 inventory_id=$(jq -r 'select(.type == "started") | .plan_id' "$app_list_output")
 application_id=$(jq -r 'select(.type == "application" and .bundle_id == "com.example.desktop") | .id' "$app_list_output")
 jq -e 'select(.type == "application" and .name == "Example" and .protected == false)' "$app_list_output" > /dev/null
+inventory_file="$fixture_root/State/Plans/app-$inventory_id.inventory"
+cp "$inventory_file" "$fixture_root/inventory.backup"
+/usr/bin/sed -i '' $'s/^engine_commit\\t.*/engine_commit\\t0000000000000000000000000000000000000000/' "$inventory_file"
+set +e
+MOLE_TEST_MODE=1 MOLE_TEST_NO_AUTH=1 \
+    SPRUCE_ENGINE_TEST_HOME="$fixture_root" SPRUCE_ENGINE_STATE_DIR="$fixture_root/State" \
+    SPRUCE_ENGINE_LOG_DIR="$fixture_root/Logs" \
+    "$engine_root/bin/gui.sh" uninstall-plan --inventory-id "$inventory_id" --app-id "$application_id" \
+        --format ndjson --no-auth > "$fixture_root/inventory-mismatch.ndjson"
+inventory_mismatch_status=$?
+set -e
+test "$inventory_mismatch_status" -ne 0
+jq -e 'select(.type == "failed" and .code == "engine_identity_mismatch")' "$fixture_root/inventory-mismatch.ndjson" > /dev/null
+mv "$fixture_root/inventory.backup" "$inventory_file"
 
 uninstall_plan_output="$fixture_root/uninstall-plan.ndjson"
 MOLE_TEST_MODE=1 \

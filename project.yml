@@ -38,6 +38,7 @@ targets:
         PRODUCT_NAME: SpruceMyMac
         MARKETING_VERSION: 0.1.0
         CURRENT_PROJECT_VERSION: 1
+        ENGINE_SIGNING_PUBLIC_KEY: ""
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: SpruceMyMac
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
@@ -50,6 +51,9 @@ targets:
       testTargets:
         - SpruceMyMacTests
     postBuildScripts:
+      - path: Scripts/embed-engine-update-config.sh
+        name: Embed engine update trust configuration
+        basedOnDependencyAnalysis: false
       - path: Scripts/embed-legal.sh
         name: Embed legal documents
         basedOnDependencyAnalysis: false

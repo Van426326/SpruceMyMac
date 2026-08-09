@@ -12,8 +12,10 @@
 		077E43E88596F151990B26C0 /* ApplicationUninstallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D83EEDD2BC62A1ADFCE848D /* ApplicationUninstallView.swift */; };
 		0BC14DEDD6E0CAD30176A10A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8EBF8014962E9D2BE2E4BBFB /* Assets.xcassets */; };
 		0BD8716D6A23B4C72B72FED4 /* ProtectionRuleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7B148534997DD3A756A0A4 /* ProtectionRuleStore.swift */; };
+		1ADB091F99DBE55E00038996 /* EngineUpdateRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06BD11C05FF7553678EF3F3 /* EngineUpdateRuntime.swift */; };
 		1B6BC10EF339A36EA1EE8B4A /* QuickLookPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0283C9CB32840903808E52DF /* QuickLookPresenter.swift */; };
 		2502BED0F736750A1028DC8E /* LocalizationResourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1730641D9F97B83F443855 /* LocalizationResourceTests.swift */; };
+		2887CD104891F15111D45153 /* EngineUpdateViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86ECF9A946DB2A311D114EA0 /* EngineUpdateViewModelTests.swift */; };
 		2AAAA9AE4831017E99553E5F /* CleanupPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7332339D83F656F4E6DF53 /* CleanupPlan.swift */; };
 		304DDF24C7B1B2C6B80E604D /* SpaceAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACE7618DA43C49D82B741BB /* SpaceAnalyzer.swift */; };
 		39130FA18ABAE369667851C2 /* OperationHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E62709DBCE3FF70D6C6836 /* OperationHistoryView.swift */; };
@@ -25,6 +27,7 @@
 		700C8349A88E3EC3AA96341D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E28AB5AF495684E63F4ACA2 /* SettingsView.swift */; };
 		754E1F8683D4262D51B1611D /* CleanupHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3120CD40B568CC17A272D9 /* CleanupHistory.swift */; };
 		7670872795064432039692B9 /* SystemMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355BF5E527BF4CB0770ADA9F /* SystemMaintenanceView.swift */; };
+		798080B990879CF84DB5BA3F /* EngineUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86E97342A7162637F675E16 /* EngineUpdateService.swift */; };
 		7B01493D5906286AFF874A93 /* FileFingerprint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD42C293C3AD04DF370AC53 /* FileFingerprint.swift */; };
 		7DE47AAB4497454658C0B6BA /* ToolboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F482A6828DB0BB6C06A93DF5 /* ToolboxView.swift */; };
 		823A2BB47FD838D28B6D6222 /* SpruceMyMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BD4EA97D89167F61C37143 /* SpruceMyMacApp.swift */; };
@@ -32,7 +35,9 @@
 		86760CB2C08090052B96D698 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B65EF1A1DEF6DFC72A06D322 /* Localizable.xcstrings */; };
 		88DADF72B1D7E2F0B75B7CD0 /* MoleBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3B7DAEB7B14F049FA4CA56 /* MoleBridge.swift */; };
 		893066E0BAEC6E1C99844BE8 /* ByteFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD6AF3D8C41ECEFB1A63222 /* ByteFormatting.swift */; };
+		8AB60630E8787BCA98BA096C /* EngineUpdateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BA87FE87E4AC51E138BB63 /* EngineUpdateTests.swift */; };
 		8DF47CB09513E0E2682FCF96 /* SystemSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03ED018F84C75024DE74BC1 /* SystemSnapshotTests.swift */; };
+		8E948468E3EDEA857C4C8E08 /* EngineUpdateSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0320BEA7016D04608B6DFA19 /* EngineUpdateSecurity.swift */; };
 		90269A7674B3AC1387EF4C2A /* SystemMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6111C439C80E484A08C742E /* SystemMonitor.swift */; };
 		96AA90149BE3B7DE44FF025D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCE0C3BCDEB0CE74FF81B41 /* AppView.swift */; };
 		B526EC449E4183D00DF1AE44 /* CleanupPlanPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F02D9EE062835B57CFA5C304 /* CleanupPlanPreviewView.swift */; };
@@ -42,6 +47,7 @@
 		D030ABB37960AF6061506B81 /* InstalledApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BD57AB840F1B7391DF8F45 /* InstalledApplication.swift */; };
 		D390CC4DB2C28176A0C5664F /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86815E15EF0EF85DE459D7EC /* AppModel.swift */; };
 		D40646D18DADC8C0AABF974C /* ToolPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D329BFBF47D57AA1AE3F21F /* ToolPlanView.swift */; };
+		D4907419E517E76341086668 /* EngineUpdateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB2FA917A2447ED62D9454B /* EngineUpdateModels.swift */; };
 		D5D3589200FD36AB1AAA3E48 /* CleanupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CA37BEF269C54A557D4C95 /* CleanupView.swift */; };
 		D5FFFAA2D49295401D402832 /* SpaceAnalyzerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9BF0B763E62A41FA448E67 /* SpaceAnalyzerTests.swift */; };
 		D75FDAF44B9C3397F32D97F8 /* ApplicationIconCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D263E7033259A0621E7528 /* ApplicationIconCache.swift */; };
@@ -68,6 +74,7 @@
 
 /* Begin PBXFileReference section */
 		0283C9CB32840903808E52DF /* QuickLookPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookPresenter.swift; sourceTree = "<group>"; };
+		0320BEA7016D04608B6DFA19 /* EngineUpdateSecurity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineUpdateSecurity.swift; sourceTree = "<group>"; };
 		0BD18B700607B0FD4E922620 /* UserCacheScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCacheScanner.swift; sourceTree = "<group>"; };
 		17369F85710118F29BF4194F /* AnalyzedFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzedFile.swift; sourceTree = "<group>"; };
 		1C9BF0B763E62A41FA448E67 /* SpaceAnalyzerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceAnalyzerTests.swift; sourceTree = "<group>"; };
@@ -86,6 +93,7 @@
 		7D8667AD6E80C64E82BC6FA4 /* CleanupHistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupHistoryTests.swift; sourceTree = "<group>"; };
 		8013303A25B86B6A5D0DBE0C /* AppSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSection.swift; sourceTree = "<group>"; };
 		86815E15EF0EF85DE459D7EC /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		86ECF9A946DB2A311D114EA0 /* EngineUpdateViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineUpdateViewModelTests.swift; sourceTree = "<group>"; };
 		8CA7F270ECEDDDBF9755FB07 /* ProtectionRuleStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtectionRuleStoreTests.swift; sourceTree = "<group>"; };
 		8EBF8014962E9D2BE2E4BBFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9C8D79B27B06912D30253DC8 /* EngineEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineEvent.swift; sourceTree = "<group>"; };
@@ -104,16 +112,20 @@
 		BDCE0C3BCDEB0CE74FF81B41 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		C03ED018F84C75024DE74BC1 /* SystemSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSnapshotTests.swift; sourceTree = "<group>"; };
 		C04963469423C2C73E7517B7 /* SpaceAnalyzerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceAnalyzerView.swift; sourceTree = "<group>"; };
+		C86E97342A7162637F675E16 /* EngineUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineUpdateService.swift; sourceTree = "<group>"; };
 		CACFFD6B12A6B9A9EDA47DC3 /* SystemSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSnapshot.swift; sourceTree = "<group>"; };
 		CFD6AF3D8C41ECEFB1A63222 /* ByteFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteFormatting.swift; sourceTree = "<group>"; };
 		D6111C439C80E484A08C742E /* SystemMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMonitor.swift; sourceTree = "<group>"; };
 		D85F82A29927B6851E2C43F3 /* ApplicationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationsView.swift; sourceTree = "<group>"; };
+		E06BD11C05FF7553678EF3F3 /* EngineUpdateRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineUpdateRuntime.swift; sourceTree = "<group>"; };
 		EACE7618DA43C49D82B741BB /* SpaceAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceAnalyzer.swift; sourceTree = "<group>"; };
+		EEB2FA917A2447ED62D9454B /* EngineUpdateModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineUpdateModels.swift; sourceTree = "<group>"; };
 		F02D9EE062835B57CFA5C304 /* CleanupPlanPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CleanupPlanPreviewView.swift; sourceTree = "<group>"; };
 		F1E62709DBCE3FF70D6C6836 /* OperationHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationHistoryView.swift; sourceTree = "<group>"; };
 		F2FBE5A7D15BE493BC4934DD /* SpruceTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpruceTheme.swift; sourceTree = "<group>"; };
 		F3BD4EA97D89167F61C37143 /* SpruceMyMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpruceMyMacApp.swift; sourceTree = "<group>"; };
 		F482A6828DB0BB6C06A93DF5 /* ToolboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolboxView.swift; sourceTree = "<group>"; };
+		F8BA87FE87E4AC51E138BB63 /* EngineUpdateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineUpdateTests.swift; sourceTree = "<group>"; };
 		FB3AA18E176A9CB9C245D2BE /* PerformanceBudgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceBudgetTests.swift; sourceTree = "<group>"; };
 		FD4B4ADBC5E7EDF4A43AFE27 /* EngineEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineEventTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -277,6 +289,8 @@
 				7D8667AD6E80C64E82BC6FA4 /* CleanupHistoryTests.swift */,
 				B901EB3662F528864C680916 /* CleanupPlanTests.swift */,
 				FD4B4ADBC5E7EDF4A43AFE27 /* EngineEventTests.swift */,
+				F8BA87FE87E4AC51E138BB63 /* EngineUpdateTests.swift */,
+				86ECF9A946DB2A311D114EA0 /* EngineUpdateViewModelTests.swift */,
 				BD1730641D9F97B83F443855 /* LocalizationResourceTests.swift */,
 				BCE501F802259D1288750BED /* MoleBridgeTests.swift */,
 				FB3AA18E176A9CB9C245D2BE /* PerformanceBudgetTests.swift */,
@@ -300,6 +314,10 @@
 			isa = PBXGroup;
 			children = (
 				9C8D79B27B06912D30253DC8 /* EngineEvent.swift */,
+				EEB2FA917A2447ED62D9454B /* EngineUpdateModels.swift */,
+				E06BD11C05FF7553678EF3F3 /* EngineUpdateRuntime.swift */,
+				0320BEA7016D04608B6DFA19 /* EngineUpdateSecurity.swift */,
+				C86E97342A7162637F675E16 /* EngineUpdateService.swift */,
 				9F3B7DAEB7B14F049FA4CA56 /* MoleBridge.swift */,
 				6F2A95CC36836615247CDEFA /* NDJSONEventDecoder.swift */,
 			);
@@ -343,6 +361,7 @@
 			buildPhases = (
 				4F11344AB51FA847128D2091 /* Sources */,
 				6D88B787EE6E32CAE8C13870 /* Resources */,
+				84507B5A137FEE5FCB9E0829 /* Embed engine update trust configuration */,
 				240EDF5709BFDB973A0F15B9 /* Embed legal documents */,
 				70F22E9E3638DDFD9F064173 /* Embed pinned Mole engine */,
 			);
@@ -461,6 +480,25 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/bash\n# SPDX-License-Identifier: GPL-3.0-only\n\nset -euo pipefail\n\nROOT_DIR=\"${SRCROOT:-$(cd \"$(dirname \"${BASH_SOURCE[0]}\")/..\" && pwd)}\"\nSOURCE_DIR=\"$ROOT_DIR/Vendor/Mole\"\n\nif [[ -z \"${TARGET_BUILD_DIR:-}\" || -z \"${UNLOCALIZED_RESOURCES_FOLDER_PATH:-}\" ]]; then\n    echo \"embed-engine.sh must run from an Xcode build phase\" >&2\n    exit 1\nfi\n\nRESOURCES_DIR=\"$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH\"\nDESTINATION_DIR=\"$RESOURCES_DIR/Engine/Mole\"\n\ncase \"$DESTINATION_DIR\" in\n    \"$TARGET_BUILD_DIR\"/*/Engine/Mole) ;;\n    *)\n        echo \"Refusing unsafe engine destination: $DESTINATION_DIR\" >&2\n        exit 1\n        ;;\nesac\n\nif [[ -e \"$DESTINATION_DIR\" ]]; then\n    /bin/rm -rf -- \"$DESTINATION_DIR\"\nfi\n\n\"$ROOT_DIR/Scripts/prepare-engine.sh\" \"$SOURCE_DIR\" \"$DESTINATION_DIR\"\n/usr/bin/install -m 644 \"$ROOT_DIR/Engine/UPSTREAM.json\" \"$RESOURCES_DIR/Engine/UPSTREAM.json\"\n";
 		};
+		84507B5A137FEE5FCB9E0829 /* Embed engine update trust configuration */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed engine update trust configuration";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\n# SPDX-License-Identifier: GPL-3.0-only\n\nset -euo pipefail\n\nif [[ -z \"${TARGET_BUILD_DIR:-}\" || -z \"${INFOPLIST_PATH:-}\" ]]; then\n    echo \"embed-engine-update-config.sh must run from an Xcode build phase\" >&2\n    exit 1\nfi\n\ninfo_plist=\"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n[[ -f \"$info_plist\" ]] || {\n    echo \"generated Info.plist is unavailable: $info_plist\" >&2\n    exit 1\n}\n\nkey=\"SpruceEngineSigningPublicKey\"\nvalue=\"${ENGINE_SIGNING_PUBLIC_KEY:-}\"\nif [[ -n \"$value\" && ! \"$value\" =~ ^[A-Za-z0-9+/]{43}=$ ]]; then\n    echo \"ENGINE_SIGNING_PUBLIC_KEY must be a 32-byte Ed25519 public key encoded as base64\" >&2\n    exit 78\nfi\n\n/usr/libexec/PlistBuddy -c \"Delete :$key\" \"$info_plist\" > /dev/null 2>&1 || true\nif [[ -n \"$value\" ]]; then\n    /usr/libexec/PlistBuddy -c \"Add :$key string $value\" \"$info_plist\"\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -483,6 +521,10 @@
 				D5D3589200FD36AB1AAA3E48 /* CleanupView.swift in Sources */,
 				6448584CB7D550715EE808BD /* DashboardView.swift in Sources */,
 				83CAD2A4E451D17850DDDA3F /* EngineEvent.swift in Sources */,
+				D4907419E517E76341086668 /* EngineUpdateModels.swift in Sources */,
+				1ADB091F99DBE55E00038996 /* EngineUpdateRuntime.swift in Sources */,
+				8E948468E3EDEA857C4C8E08 /* EngineUpdateSecurity.swift in Sources */,
+				798080B990879CF84DB5BA3F /* EngineUpdateService.swift in Sources */,
 				7B01493D5906286AFF874A93 /* FileFingerprint.swift in Sources */,
 				D030ABB37960AF6061506B81 /* InstalledApplication.swift in Sources */,
 				88DADF72B1D7E2F0B75B7CD0 /* MoleBridge.swift in Sources */,
@@ -513,6 +555,8 @@
 				F5ABF772077C44CC399E04CC /* CleanupHistoryTests.swift in Sources */,
 				E8034579BA85A194DD4A5660 /* CleanupPlanTests.swift in Sources */,
 				55C68A4B2ADC23A7498D78F0 /* EngineEventTests.swift in Sources */,
+				8AB60630E8787BCA98BA096C /* EngineUpdateTests.swift in Sources */,
+				2887CD104891F15111D45153 /* EngineUpdateViewModelTests.swift in Sources */,
 				2502BED0F736750A1028DC8E /* LocalizationResourceTests.swift in Sources */,
 				0571169AA4D397D64B243047 /* MoleBridgeTests.swift in Sources */,
 				EA6D1BD938CAD962CAB8488A /* PerformanceBudgetTests.swift in Sources */,
@@ -543,6 +587,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENGINE_SIGNING_PUBLIC_KEY = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = SpruceMyMac;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -645,6 +690,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENGINE_SIGNING_PUBLIC_KEY = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = SpruceMyMac;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";

@@ -61,6 +61,7 @@ build_settings=(
     -archivePath "$ARCHIVE_PATH"
     ARCHS="arm64 x86_64"
     ONLY_ACTIVE_ARCH=NO
+    ENGINE_SIGNING_PUBLIC_KEY="${ENGINE_SIGNING_PUBLIC_KEY:-}"
 )
 
 if [[ "$SIGNED" == "true" ]]; then

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
+import Darwin
 import Foundation
 
 /// Defines the stable boundary between the native UI and the bundled engine.
@@ -22,35 +23,39 @@ enum ToolboxEngineTool: String, Sendable {
 actor BundledMoleBridge: CleaningEngine {
     static let supportedProtocolVersion = 1
 
-    private let executableURL: URL?
-    private var runningProcess: ProcessBox?
+    private enum ExecutableSource: Sendable {
+        case fixed(URL)
+        case resolved(any EngineResolving)
+    }
 
-    init(bundle: Bundle = .main) {
-        let launcher = bundle.url(
-            forResource: "sprucemymac-engine",
-            withExtension: nil,
-            subdirectory: "Engine"
-        )
-        let overlayCommand = bundle.url(
-            forResource: "gui",
-            withExtension: "sh",
-            subdirectory: "Engine/Mole/bin"
-        )
+    private let executableSource: ExecutableSource
+    private var runningProcesses: [UUID: ProcessBox] = [:]
+    private var activeOperationIDs: Set<UUID> = []
+    private var pendingCancellations: Set<UUID> = []
+
+    init() {
 #if DEBUG
-        let developmentPath = ProcessInfo.processInfo.environment["SPRUCE_ENGINE_PATH"]
-            .map(URL.init(fileURLWithPath:))
+        if let developmentPath = ProcessInfo.processInfo.environment["SPRUCE_ENGINE_PATH"],
+           !developmentPath.isEmpty {
+            executableSource = .fixed(URL(fileURLWithPath: developmentPath))
+        } else {
+            executableSource = .resolved(EngineUpdateRuntime.resolver)
+        }
 #else
-        let developmentPath: URL? = nil
+        executableSource = .resolved(EngineUpdateRuntime.resolver)
 #endif
-        executableURL = launcher ?? overlayCommand ?? developmentPath
     }
 
     init(executableURL: URL) {
-        self.executableURL = executableURL
+        executableSource = .fixed(executableURL)
     }
 
-    func isAvailable() -> Bool {
-        guard let executableURL else { return false }
+    init(resolver: any EngineResolving) {
+        executableSource = .resolved(resolver)
+    }
+
+    func isAvailable() async -> Bool {
+        guard let executableURL = try? await resolveExecutableURL() else { return false }
         return FileManager.default.isExecutableFile(atPath: executableURL.path)
     }
 
@@ -59,7 +64,8 @@ actor BundledMoleBridge: CleaningEngine {
             arguments: ["clean-plan", "--format", "ndjson", "--no-auth"],
             expectedOperation: "clean",
             expectedPlanID: nil,
-            useTestAuthorizationGuard: true
+            useTestAuthorizationGuard: true,
+            permitsCancellation: true
         )
     }
 
@@ -82,7 +88,8 @@ actor BundledMoleBridge: CleaningEngine {
             ],
             expectedOperation: "apply_clean",
             expectedPlanID: planID.lowercased(),
-            useTestAuthorizationGuard: false
+            useTestAuthorizationGuard: false,
+            permitsCancellation: false
         )
     }
 
@@ -91,7 +98,8 @@ actor BundledMoleBridge: CleaningEngine {
             arguments: ["app-list", "--format", "ndjson", "--no-auth"],
             expectedOperation: "app_list",
             expectedPlanID: nil,
-            useTestAuthorizationGuard: true
+            useTestAuthorizationGuard: true,
+            permitsCancellation: true
         )
     }
 
@@ -110,7 +118,8 @@ actor BundledMoleBridge: CleaningEngine {
             ],
             expectedOperation: "uninstall_plan",
             expectedPlanID: nil,
-            useTestAuthorizationGuard: true
+            useTestAuthorizationGuard: true,
+            permitsCancellation: true
         )
     }
 
@@ -119,7 +128,8 @@ actor BundledMoleBridge: CleaningEngine {
             arguments: ["tool-plan", "--tool", tool.rawValue, "--format", "ndjson", "--no-auth"],
             expectedOperation: "tool_plan",
             expectedPlanID: nil,
-            useTestAuthorizationGuard: true
+            useTestAuthorizationGuard: true,
+            permitsCancellation: true
         )
     }
 
@@ -127,23 +137,39 @@ actor BundledMoleBridge: CleaningEngine {
         arguments: [String],
         expectedOperation: String,
         expectedPlanID: String?,
-        useTestAuthorizationGuard: Bool
+        useTestAuthorizationGuard: Bool,
+        permitsCancellation: Bool
     ) async throws -> [EngineEvent] {
-        guard let executableURL,
-              FileManager.default.isExecutableFile(atPath: executableURL.path) else {
+        let executableURL: URL
+        do {
+            executableURL = try await resolveExecutableURL()
+        } catch {
+            throw EngineProtocolError.executableUnavailable
+        }
+        guard FileManager.default.isExecutableFile(atPath: executableURL.path) else {
             throw EngineProtocolError.executableUnavailable
         }
 
+        let operationID = UUID()
+        activeOperationIDs.insert(operationID)
+        defer {
+            activeOperationIDs.remove(operationID)
+            pendingCancellations.remove(operationID)
+        }
         let output = try await withTaskCancellationHandler {
             try await run(
                 executableURL: executableURL,
                 arguments: arguments,
-                useTestAuthorizationGuard: useTestAuthorizationGuard
+                useTestAuthorizationGuard: useTestAuthorizationGuard,
+                operationID: operationID
             )
         } onCancel: {
-            Task { await self.cancelRunningProcess() }
+            guard permitsCancellation else { return }
+            Task { await self.cancelRunningProcess(operationID: operationID) }
         }
-        try Task.checkCancellation()
+        if permitsCancellation {
+            try Task.checkCancellation()
+        }
         let decoder = NDJSONEventDecoder()
         let events = try output.standardOutput
             .split(whereSeparator: \.isNewline)
@@ -214,20 +240,44 @@ actor BundledMoleBridge: CleaningEngine {
         return events
     }
 
+    private func resolveExecutableURL() async throws -> URL {
+        switch executableSource {
+        case let .fixed(url):
+            return url
+        case let .resolved(resolver):
+            return try await resolver.resolve().executableURL
+        }
+    }
+
     private func run(
         executableURL: URL,
         arguments: [String],
-        useTestAuthorizationGuard: Bool
+        useTestAuthorizationGuard: Bool,
+        operationID: UUID
     ) async throws -> ProcessOutput {
         let process = Process()
-        let standardOutput = Pipe()
-        let standardError = Pipe()
+        let completion = DispatchSemaphore(value: 0)
+        let captureDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("SpruceBridge-\(operationID.uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(
+            at: captureDirectory,
+            withIntermediateDirectories: false,
+            attributes: [.posixPermissions: 0o700]
+        )
+        defer { try? FileManager.default.removeItem(at: captureDirectory) }
+        let outputURL = captureDirectory.appendingPathComponent("stdout")
+        let errorURL = captureDirectory.appendingPathComponent("stderr")
+        _ = FileManager.default.createFile(atPath: outputURL.path, contents: nil, attributes: [.posixPermissions: 0o600])
+        _ = FileManager.default.createFile(atPath: errorURL.path, contents: nil, attributes: [.posixPermissions: 0o600])
+        let standardOutput = try FileHandle(forWritingTo: outputURL)
+        let standardError = try FileHandle(forWritingTo: errorURL)
 
         process.executableURL = executableURL
         process.arguments = arguments
         process.currentDirectoryURL = executableURL.deletingLastPathComponent()
         process.standardOutput = standardOutput
         process.standardError = standardError
+        process.terminationHandler = { _ in completion.signal() }
         var environment = ProcessInfo.processInfo.environment
         environment["NO_COLOR"] = "1"
         if useTestAuthorizationGuard {
@@ -238,26 +288,58 @@ actor BundledMoleBridge: CleaningEngine {
         process.environment = environment
 
         let processBox = ProcessBox(process)
-        runningProcess = processBox
-        defer { runningProcess = nil }
+        runningProcesses[operationID] = processBox
+        defer { runningProcesses.removeValue(forKey: operationID) }
 
-        try process.run()
-        return await Task.detached(priority: .userInitiated) {
-            let outputData = standardOutput.fileHandleForReading.readDataToEndOfFile()
-            let errorData = standardError.fileHandleForReading.readDataToEndOfFile()
-            processBox.process.waitUntilExit()
-
+        do {
+            try process.run()
+            if pendingCancellations.remove(operationID) != nil {
+                requestTermination(of: processBox)
+            }
+        } catch {
+            try? standardOutput.close()
+            try? standardError.close()
+            throw error
+        }
+        return try await Task.detached(priority: .userInitiated) {
+            Self.waitForProcessCompletion(completion)
+            try standardOutput.close()
+            try standardError.close()
+            let maximumCapture = 16 * 1024 * 1024
+            let outputSize = (try FileManager.default.attributesOfItem(atPath: outputURL.path)[.size] as? NSNumber)?.intValue ?? 0
+            let errorSize = (try FileManager.default.attributesOfItem(atPath: errorURL.path)[.size] as? NSNumber)?.intValue ?? 0
+            guard outputSize <= maximumCapture, errorSize <= maximumCapture else {
+                throw EngineProtocolError.invalidEventSequence
+            }
             return ProcessOutput(
                 exitCode: processBox.process.terminationStatus,
-                standardOutput: String(decoding: outputData, as: UTF8.self),
-                standardError: errorData
+                standardOutput: String(decoding: try Data(contentsOf: outputURL), as: UTF8.self),
+                standardError: try Data(contentsOf: errorURL)
             )
         }.value
     }
 
-    private func cancelRunningProcess() {
-        guard let process = runningProcess?.process, process.isRunning else { return }
-        process.terminate()
+    private func cancelRunningProcess(operationID: UUID) {
+        guard activeOperationIDs.contains(operationID) else { return }
+        guard let processBox = runningProcesses[operationID] else {
+            pendingCancellations.insert(operationID)
+            return
+        }
+        requestTermination(of: processBox)
+    }
+
+    private func requestTermination(of processBox: ProcessBox) {
+        guard processBox.process.isRunning else { return }
+        processBox.process.terminate()
+        Task.detached(priority: .utility) {
+            try? await Task.sleep(for: .seconds(2))
+            guard processBox.process.isRunning else { return }
+            kill(processBox.process.processIdentifier, SIGKILL)
+        }
+    }
+
+    private nonisolated static func waitForProcessCompletion(_ completion: DispatchSemaphore) {
+        completion.wait()
     }
 
     private nonisolated static func isValidCandidateID(_ value: String) -> Bool {

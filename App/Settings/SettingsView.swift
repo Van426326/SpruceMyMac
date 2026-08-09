@@ -3,29 +3,125 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 struct SettingsView: View {
+    @StateObject private var engineUpdates: EngineUpdateViewModel
+
+    init(engineUpdates: EngineUpdateViewModel = EngineUpdateViewModel()) {
+        _engineUpdates = StateObject(wrappedValue: engineUpdates)
+    }
+
     var body: some View {
         TabView {
-            GeneralSettingsView()
+            GeneralSettingsView(engineUpdates: engineUpdates)
                 .tabItem { Label("通用", systemImage: "gearshape") }
             AboutView()
                 .tabItem { Label("关于", systemImage: "info.circle") }
         }
-        .frame(width: 540, height: 390)
+        .frame(width: 620, height: 570)
     }
 }
 
 private struct GeneralSettingsView: View {
     @AppStorage("showAdvancedItems") private var showAdvancedItems = false
+    @ObservedObject var engineUpdates: EngineUpdateViewModel
 
     var body: some View {
         Form {
-            Toggle("显示高级候选项", isOn: $showAdvancedItems)
-            LabeledContent("清理方式", value: String(localized: "确认后移入废纸篓"))
-            LabeledContent("数据目录", value: "Application Support/SpruceMyMac")
+            Section {
+                Toggle("显示高级候选项", isOn: $showAdvancedItems)
+                LabeledContent("清理方式", value: String(localized: "确认后移入废纸篓"))
+                LabeledContent("数据目录", value: "Application Support/SpruceMyMac")
+            }
+
+            Section("清理引擎") {
+                if let current = engineUpdates.currentEngine {
+                    LabeledContent("引擎版本", value: current.version.description)
+                    LabeledContent("Mole 提交", value: String(current.upstreamCommit.prefix(10)))
+                    if let provenance = engineUpdates.provenanceDescription {
+                        LabeledContent("引擎来源", value: provenance)
+                    }
+                    if let sourceURL = current.sourceURL {
+                        Link("查看对应源码", destination: sourceURL)
+                    }
+                } else if engineUpdates.phase != .refreshing {
+                    Text("尚未读取引擎状态。")
+                        .foregroundStyle(.secondary)
+                }
+
+                if !engineUpdates.updatesEnabled {
+                    Label(
+                        "引擎更新尚未配置；当前将继续使用已验证的本地引擎。",
+                        systemImage: "lock.shield"
+                    )
+                    .foregroundStyle(.secondary)
+                }
+
+                Text("仅接受由 SpruceMyMac 官方密钥签名且与当前应用兼容的引擎包。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if let candidate = engineUpdates.candidate {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("发现版本 \(candidate.manifest.engineVersion.description)")
+                            .font(.callout.weight(.semibold))
+                        LabeledContent("Mole 提交", value: String(candidate.manifest.upstreamCommit.prefix(10)))
+                        LabeledContent("发布时间", value: candidate.manifest.publishedAt)
+                        Link("查看更新对应源码", destination: candidate.manifest.source.url)
+                        Button("下载、验证并安装") {
+                            Task { await engineUpdates.installCandidate() }
+                        }
+                        .disabled(engineUpdates.isBusy)
+                    }
+                }
+
+                if let phaseMessage = engineUpdates.phaseMessage {
+                    HStack(spacing: 8) {
+                        ProgressView().controlSize(.small)
+                        Text(phaseMessage)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+
+                HStack {
+                    Button("刷新引擎状态") {
+                        Task { await engineUpdates.refreshCurrent() }
+                    }
+                    .disabled(engineUpdates.isBusy)
+
+                    Button("检查引擎更新") {
+                        Task { await engineUpdates.checkForUpdate() }
+                    }
+                    .disabled(engineUpdates.isBusy || !engineUpdates.updatesEnabled)
+
+                    if engineUpdates.canRestoreBundled {
+                        Button("恢复内置引擎") {
+                            Task { await engineUpdates.restoreBundled() }
+                        }
+                        .disabled(engineUpdates.isBusy)
+                    }
+                }
+
+                if let notice = engineUpdates.noticeMessage {
+                    Text(notice)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                if let error = engineUpdates.errorMessage {
+                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .accessibilityLabel(String(localized: "引擎更新错误：\(error)"))
+                }
+            }
         }
         .formStyle(.grouped)
         .padding(.top, 8)
+        .task {
+            if engineUpdates.currentEngine == nil {
+                await engineUpdates.refreshCurrent()
+            }
+        }
     }
 }
 
