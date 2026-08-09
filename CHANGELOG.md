@@ -3,6 +3,14 @@
 All notable changes to SpruceMyMac are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## 0.2.1 - 2026-08-09
+
+### Fixed
+
+- Restore bundled Engine discovery by providing the required user environment
+  during the compatibility handshake.
+- Keep the read-only `engine-info` handshake independent of `HOME` initialization.
+
 ## 0.2.0 - 2026-08-09
 
 ### Added

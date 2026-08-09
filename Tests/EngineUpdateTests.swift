@@ -49,6 +49,27 @@ final class EngineUpdateTests: XCTestCase {
         }
     }
 
+    func testSystemEngineRunnerProvidesRequiredHandshakeEnvironment() async throws {
+        let root = makeTemporaryDirectory()
+        let bin = root.appendingPathComponent("Mole/bin", isDirectory: true)
+        try FileManager.default.createDirectory(at: bin, withIntermediateDirectories: true)
+        let executable = bin.appendingPathComponent("gui.sh")
+        let script = """
+        #!/bin/bash
+        set -euo pipefail
+        [[ -n "$HOME" && -n "$TMPDIR" ]]
+        /bin/cat "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/engine-info.json"
+        """
+        try Data(script.utf8).write(to: executable)
+        try FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: executable.path)
+        try encoded(try engineInformation(version: "1.0.0"))
+            .write(to: bin.deletingLastPathComponent().appendingPathComponent("engine-info.json"))
+
+        let information = try await EngineHandshake(runner: SystemEngineProcessRunner())
+            .information(at: executable)
+        XCTAssertEqual(information.engineVersion.description, "1.0.0")
+    }
+
     func testManifestRejectsUnsafeAndDuplicateFiles() throws {
         let fixture = try makeFixture(version: "1.1.0")
         for path in [

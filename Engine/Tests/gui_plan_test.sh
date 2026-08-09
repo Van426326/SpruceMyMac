@@ -16,6 +16,9 @@ engine_info_home=$(mktemp -d "/private/tmp/sprucemymac-engine-info-test.XXXXXX")
 engine_info="$(HOME="$engine_info_home" "$engine_root/bin/gui.sh" engine-info --format json)"
 test -z "$(find "$engine_info_home" -mindepth 1 -print -quit)"
 /bin/rm -rf "$engine_info_home"
+engine_info_without_home=$(env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin LC_ALL=C LANG=C NO_COLOR=1 \
+    "$engine_root/bin/gui.sh" engine-info --format json)
+test "$engine_info_without_home" = "$engine_info"
 printf '%s\n' "$engine_info" | jq -e \
     --arg version "$expected_engine_version" \
     --arg commit "$expected_upstream_commit" '
