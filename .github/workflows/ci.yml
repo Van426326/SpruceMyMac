@@ -25,12 +25,16 @@ jobs:
       - name: Validate sources and localization
         run: |
           git diff --check
-          bash -n Scripts/*.sh Engine/Overlay/bin/gui.sh Engine/Tests/gui_plan_test.sh
+          bash -n Scripts/*.sh Engine/Overlay/bin/gui.sh Engine/Tests/*.sh
           Scripts/verify-localization.sh
+          Scripts/verify-engine-metadata.sh
+          Engine/Tests/engine_update_config_test.sh
           test "$(git -C Vendor/Mole rev-parse HEAD)" = "$(jq -r .commit Engine/UPSTREAM.json)"
 
       - name: Generate Xcode project
-        run: xcodegen generate
+        run: |
+          xcodegen generate
+          git diff --exit-code -- SpruceMyMac.xcodeproj/project.pbxproj
 
       - name: Run Swift tests
         run: >-
@@ -45,6 +49,9 @@ jobs:
         run: |
           APP=build/CIDerivedData/Build/Products/Debug/SpruceMyMac.app
           Engine/Tests/gui_plan_test.sh "$APP/Contents/Resources/Engine/Mole"
+
+      - name: Verify signed engine packaging and tamper detection
+        run: Engine/Tests/engine_package_test.sh
 
       - name: Build unsigned Universal 2 release
         run: Scripts/build-release.sh --unsigned --output build/ci-release

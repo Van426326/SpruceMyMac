@@ -90,6 +90,23 @@ All apply operations accept opaque candidate IDs only, revalidate the complete
 selection before moving anything, atomically consume the plan to prevent
 replay, and route removals through Mole's Trash deletion funnel.
 
+## Manual engine updates
+
+The Settings window can manually check for a newer SpruceMyMac Engine package.
+Downloaded engines are accepted only after an embedded Ed25519 public key
+verifies the signed manifest, every payload file matches that manifest, and the
+engine reports a protocol and App-build range compatible with this build. The
+active and previous versions are stored under
+`~/Library/Application Support/SpruceMyMac/Engines`; the immutable engine in
+the App bundle remains the final fallback.
+
+No signing key is committed to this repository. Builds without an
+`ENGINE_SIGNING_PUBLIC_KEY` safely disable the Check for Updates button, ignore
+downloaded engines that cannot be authenticated without that trust root, and
+continue using the bundled engine. They never fall back to an unsigned update.
+Release-key provisioning and Engine package publication are documented in
+[`docs/RELEASE.md`](docs/RELEASE.md).
+
 ## System maintenance commands
 
 The GitHub build does not install a privileged helper or persistent root

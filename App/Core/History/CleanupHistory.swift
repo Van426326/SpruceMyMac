@@ -141,9 +141,11 @@ actor CleanupHistoryStore {
             current.removeLast(current.count - 200)
         }
         let data = try encoder.encode(current)
-        try data.write(
-            to: directoryURL.appendingPathComponent("history.json"),
-            options: [.atomic, .completeFileProtection]
+        let historyURL = directoryURL.appendingPathComponent("history.json")
+        try data.write(to: historyURL, options: .atomic)
+        try fileManager.setAttributes(
+            [.posixPermissions: 0o600],
+            ofItemAtPath: historyURL.path
         )
     }
 

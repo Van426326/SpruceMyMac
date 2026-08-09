@@ -1,0 +1,139 @@
+name: Engine Release
+
+on:
+  push:
+    tags:
+      - "engine-v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: engine-release
+  cancel-in-progress: false
+
+jobs:
+  package-and-publish:
+    runs-on: macos-15
+    timeout-minutes: 40
+    environment: engine-signing
+    steps:
+      - name: Check out source and pinned Mole
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install build tools
+        run: brew install jq
+
+      - name: Validate protected tag and engine version
+        id: version
+        run: |
+          git fetch --no-tags origin main
+          TAG_VERSION="${GITHUB_REF_NAME#engine-v}"
+          [[ "$TAG_VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          METADATA_VERSION="$(jq -r .engineVersion Engine/UPSTREAM.json)"
+          test "$TAG_VERSION" = "$METADATA_VERSION"
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          test "$(git -C Vendor/Mole rev-parse HEAD)" = "$(jq -r .commit Engine/UPSTREAM.json)"
+          COMMIT_EPOCH="$(git show -s --format=%ct "$GITHUB_SHA")"
+          PUBLISHED_AT="$(date -u -r "$COMMIT_EPOCH" '+%Y-%m-%dT%H:%M:%SZ')"
+          printf 'version=%s\n' "$METADATA_VERSION" >> "$GITHUB_OUTPUT"
+          printf 'tag=engine-v%s\n' "$METADATA_VERSION" >> "$GITHUB_OUTPUT"
+          printf 'published_at=%s\n' "$PUBLISHED_AT" >> "$GITHUB_OUTPUT"
+
+      - name: Validate scripts and prepared engine
+        run: |
+          git diff --check
+          bash -n Scripts/*.sh Engine/Overlay/bin/gui.sh Engine/Tests/*.sh
+          Scripts/verify-engine-metadata.sh
+          Scripts/prepare-engine.sh Vendor/Mole build/EngineReleaseTest
+          Engine/Tests/gui_plan_test.sh build/EngineReleaseTest
+
+      - name: Package and verify signed engine
+        env:
+          ENGINE_SIGNING_PRIVATE_KEY: ${{ secrets.ENGINE_SIGNING_PRIVATE_KEY }}
+          ENGINE_SIGNING_PUBLIC_KEY: ${{ vars.ENGINE_SIGNING_PUBLIC_KEY }}
+          ENGINE_PUBLISHED_AT: ${{ steps.version.outputs.published_at }}
+        run: |
+          test -n "$ENGINE_SIGNING_PRIVATE_KEY"
+          test -n "$ENGINE_SIGNING_PUBLIC_KEY"
+          Scripts/package-engine.sh build/engine-release
+          Scripts/verify-engine-package.sh build/engine-release "$ENGINE_SIGNING_PUBLIC_KEY"
+          (cd build/engine-release && shasum -a 256 -c ./*.sha256)
+
+      - name: Publish or verify immutable versioned assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_SIGNING_PUBLIC_KEY: ${{ vars.ENGINE_SIGNING_PUBLIC_KEY }}
+          VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            test "$(gh release view "$RELEASE_TAG" --json targetCommitish --jq .targetCommitish)" = "$GITHUB_SHA"
+            existing_dir="$(mktemp -d)"
+            trap '/bin/rm -rf "$existing_dir"' EXIT
+            gh release download "$RELEASE_TAG" --dir "$existing_dir"
+            expected_count=0
+            for expected in build/engine-release/*; do
+              test -f "$expected"
+              actual="$existing_dir/$(basename "$expected")"
+              test -f "$actual"
+              case "$(basename "$expected")" in
+                *-manifest.sig|*-manifest.sig.sha256) ;;
+                *) cmp -s "$expected" "$actual" ;;
+              esac
+              expected_count=$((expected_count + 1))
+            done
+            test "$(find "$existing_dir" -maxdepth 1 -type f | wc -l | tr -d ' ')" -eq "$expected_count"
+            Scripts/verify-engine-package.sh "$existing_dir" "$ENGINE_SIGNING_PUBLIC_KEY"
+            (cd "$existing_dir" && shasum -a 256 -c ./*.sha256)
+            cp "$existing_dir/SpruceMyMac-Engine-$VERSION-manifest.sig" \
+              "build/engine-release/SpruceMyMac-Engine-$VERSION-manifest.sig"
+            cp "$existing_dir/SpruceMyMac-Engine-$VERSION-manifest.sig.sha256" \
+              "build/engine-release/SpruceMyMac-Engine-$VERSION-manifest.sig.sha256"
+          else
+            gh release create "$RELEASE_TAG" \
+              build/engine-release/* \
+              --target "$GITHUB_SHA" \
+              --title "SpruceMyMac Engine $VERSION" \
+              --notes "Signed SpruceMyMac engine package and complete corresponding GPL source. These versioned assets are immutable."
+          fi
+
+      - name: Update signed engine feed assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE_SIGNING_PUBLIC_KEY: ${{ vars.ENGINE_SIGNING_PUBLIC_KEY }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          cp "build/engine-release/SpruceMyMac-Engine-$VERSION-manifest.json" build/engine-release/engine-manifest.json
+          cp "build/engine-release/SpruceMyMac-Engine-$VERSION-manifest.sig" build/engine-release/engine-manifest.sig
+          if gh release view engine-feed > /dev/null 2>&1; then
+            current_feed="$(mktemp -d)"
+            trap '/bin/rm -rf "$current_feed"' EXIT
+            gh release download engine-feed \
+              --pattern engine-manifest.json \
+              --pattern engine-manifest.sig \
+              --dir "$current_feed"
+            decision=$(Scripts/check-engine-feed-update.sh \
+              "$current_feed/engine-manifest.json" \
+              "$current_feed/engine-manifest.sig" \
+              build/engine-release/engine-manifest.json \
+              build/engine-release/engine-manifest.sig \
+              "$ENGINE_SIGNING_PUBLIC_KEY")
+            if [[ "$decision" == "stale" ]]; then
+              echo "A newer signed engine feed is already published; leaving it unchanged."
+              exit 0
+            fi
+          else
+            gh release create engine-feed \
+              --target "$GITHUB_SHA" \
+              --prerelease \
+              --title "SpruceMyMac Engine Update Feed" \
+              --notes "Mutable pointer containing only the latest signed engine manifest and detached signature. Versioned engine and source assets remain immutable."
+          fi
+          gh release upload engine-feed \
+            build/engine-release/engine-manifest.json \
+            build/engine-release/engine-manifest.sig \
+            --clobber

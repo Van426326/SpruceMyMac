@@ -33,6 +33,7 @@ for patch_file in "$ROOT_DIR"/Engine/Patches/*.patch; do
 done
 
 ditto "$ROOT_DIR/Engine/Overlay" "$DESTINATION_DIR"
+/usr/bin/install -m 644 "$ROOT_DIR/Engine/UPSTREAM.json" "$DESTINATION_DIR/engine-info.json"
 chmod +x "$DESTINATION_DIR/bin/gui.sh"
 
 echo "Prepared SpruceMyMac engine at $DESTINATION_DIR"

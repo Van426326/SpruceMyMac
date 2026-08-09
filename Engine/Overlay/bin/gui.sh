@@ -11,6 +11,39 @@ export MO_NO_OPLOG=1
 export MOLE_LOG_DIR="${SPRUCE_ENGINE_LOG_DIR:-$HOME/Library/Logs/SpruceMyMac}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Handle the compatibility handshake before loading Mole. common.sh creates a
+# temporary working directory, while engine-info must remain strictly read-only.
+gui_engine_info_main() {
+    [[ $# -eq 3 && "$1" == "engine-info" && "$2" == "--format" && "$3" == "json" ]] || {
+        printf '%s\n' '{"error":"invalid_engine_info_request"}' >&2
+        return 64
+    }
+
+    local metadata_file="$SCRIPT_DIR/../engine-info.json"
+    if [[ ! -f "$metadata_file" || -L "$metadata_file" ]]; then
+        printf '%s\n' '{"error":"engine_metadata_unavailable"}' >&2
+        return 70
+    fi
+    /bin/cat "$metadata_file"
+}
+
+if [[ "${1:-}" == "engine-info" ]]; then
+    gui_engine_info_main "$@"
+    exit $?
+fi
+
+readonly SPRUCE_ENGINE_METADATA_FILE="$SCRIPT_DIR/../engine-info.json"
+SPRUCE_ENGINE_PACKAGE_VERSION=$(/usr/bin/awk -F'"' '$2 == "engineVersion" { print $4; exit }' "$SPRUCE_ENGINE_METADATA_FILE" 2> /dev/null || true)
+SPRUCE_ENGINE_UPSTREAM_COMMIT=$(/usr/bin/awk -F'"' '$2 == "commit" { print $4; exit }' "$SPRUCE_ENGINE_METADATA_FILE" 2> /dev/null || true)
+if [[ ! "$SPRUCE_ENGINE_PACKAGE_VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ||
+      ! "$SPRUCE_ENGINE_UPSTREAM_COMMIT" =~ ^[0-9a-f]{40}$ ]]; then
+    printf '%s\n' '{"error":"engine_identity_unavailable"}' >&2
+    exit 70
+fi
+readonly SPRUCE_ENGINE_PACKAGE_VERSION
+readonly SPRUCE_ENGINE_UPSTREAM_COMMIT
+
 source "$SCRIPT_DIR/../lib/core/common.sh"
 
 readonly SPRUCE_GUI_PROTOCOL_VERSION=1
@@ -306,6 +339,8 @@ gui_clean_plan() {
 
     {
         printf 'protocol\t%s\n' "$SPRUCE_GUI_PROTOCOL_VERSION"
+        printf 'engine_version\t%s\n' "$SPRUCE_ENGINE_PACKAGE_VERSION"
+        printf 'engine_commit\t%s\n' "$SPRUCE_ENGINE_UPSTREAM_COMMIT"
         printf 'plan_id\t%s\n' "$plan_id"
         printf 'scope\tclean\n'
         printf 'created_at\t%s\n' "$created_at"
@@ -408,6 +443,8 @@ gui_app_list() {
     chmod 600 "$staging_file"
     {
         printf 'protocol\t%s\n' "$SPRUCE_GUI_PROTOCOL_VERSION"
+        printf 'engine_version\t%s\n' "$SPRUCE_ENGINE_PACKAGE_VERSION"
+        printf 'engine_commit\t%s\n' "$SPRUCE_ENGINE_UPSTREAM_COMMIT"
         printf 'inventory_id\t%s\n' "$inventory_id"
         printf 'created_at\t%s\n' "$created_at"
         printf 'expires_at\t%s\n' "$expires_at"
@@ -462,6 +499,7 @@ gui_uninstall_plan() {
     }
 
     local protocol="" stored_inventory_id="" expires_at=""
+    local engine_version="" engine_commit=""
     local app_id="" app_device="" app_inode="" app_modified="" app_size="" app_is_protected=""
     local app_source="" bundle_id="" app_path="" app_name=""
     local kind a b c d e f g h i j
@@ -470,6 +508,8 @@ gui_uninstall_plan() {
     while IFS=$'\t' read -r kind a b c d e f g h i j; do
         case "$kind" in
             protocol) protocol="$a" ;;
+            engine_version) engine_version="$a" ;;
+            engine_commit) engine_commit="$a" ;;
             inventory_id) stored_inventory_id="$a" ;;
             created_at) ;;
             expires_at) expires_at="$a" ;;
@@ -484,6 +524,11 @@ gui_uninstall_plan() {
         esac
     done < "$inventory_file"
 
+    if [[ "$engine_version" != "$SPRUCE_ENGINE_PACKAGE_VERSION" ||
+        "$engine_commit" != "$SPRUCE_ENGINE_UPSTREAM_COMMIT" ]]; then
+        gui_emit_failed "engine_identity_mismatch" "engine.engine_identity_mismatch"
+        return 1
+    fi
     if [[ "$protocol" != "$SPRUCE_GUI_PROTOCOL_VERSION" || "$stored_inventory_id" != "$inventory_id" ||
         ! "$expires_at" =~ ^[0-9]+$ || "$(date +%s)" -ge "$expires_at" || -z "$app_id" ]]; then
         gui_emit_failed "inventory_expired_or_invalid" "engine.inventory_expired_or_invalid"
@@ -593,8 +638,9 @@ gui_uninstall_plan() {
     staging_file=$(mktemp "$plan_dir/.$plan_id.XXXXXX") || return 1
     chmod 600 "$staging_file"
     {
-        printf 'protocol\t%s\nplan_id\t%s\nscope\tuninstall\ncreated_at\t%s\nexpires_at\t%s\n' \
-            "$SPRUCE_GUI_PROTOCOL_VERSION" "$plan_id" "$created_at" "$plan_expires"
+        printf 'protocol\t%s\nengine_version\t%s\nengine_commit\t%s\nplan_id\t%s\nscope\tuninstall\ncreated_at\t%s\nexpires_at\t%s\n' \
+            "$SPRUCE_GUI_PROTOCOL_VERSION" "$SPRUCE_ENGINE_PACKAGE_VERSION" \
+            "$SPRUCE_ENGINE_UPSTREAM_COMMIT" "$plan_id" "$created_at" "$plan_expires"
         for ((idx = 0; idx < ${#target_ids[@]}; idx++)); do
             printf 'candidate\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
                 "${target_ids[$idx]}" "${target_devices[$idx]}" "${target_inodes[$idx]}" \
@@ -693,8 +739,9 @@ gui_tool_plan() {
     staging_file=$(mktemp "$plan_dir/.$plan_id.XXXXXX") || return 1
     chmod 600 "$staging_file"
     {
-        printf 'protocol\t%s\nplan_id\t%s\nscope\ttoolbox\ncreated_at\t%s\nexpires_at\t%s\n' \
-            "$SPRUCE_GUI_PROTOCOL_VERSION" "$plan_id" "$created_at" "$expires_at"
+        printf 'protocol\t%s\nengine_version\t%s\nengine_commit\t%s\nplan_id\t%s\nscope\ttoolbox\ncreated_at\t%s\nexpires_at\t%s\n' \
+            "$SPRUCE_GUI_PROTOCOL_VERSION" "$SPRUCE_ENGINE_PACKAGE_VERSION" \
+            "$SPRUCE_ENGINE_UPSTREAM_COMMIT" "$plan_id" "$created_at" "$expires_at"
         for ((idx = 0; idx < ${#target_ids[@]}; idx++)); do
             printf 'candidate\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
                 "${target_ids[$idx]}" "${target_devices[$idx]}" "${target_inodes[$idx]}" \
@@ -768,6 +815,7 @@ gui_apply_plan() {
     done
 
     local protocol="" stored_plan_id="" scope="" created_at="" expires_at=""
+    local engine_version="" engine_commit=""
     local -a plan_ids=()
     local -a plan_devices=()
     local -a plan_inodes=()
@@ -778,6 +826,8 @@ gui_apply_plan() {
     while IFS=$'\t' read -r kind a b c d e f g; do
         case "$kind" in
             protocol) protocol="$a" ;;
+            engine_version) engine_version="$a" ;;
+            engine_commit) engine_commit="$a" ;;
             plan_id) stored_plan_id="$a" ;;
             scope) scope="$a" ;;
             created_at) created_at="$a" ;;
@@ -801,6 +851,11 @@ gui_apply_plan() {
         esac
     done < "$plan_file"
 
+    if [[ "$engine_version" != "$SPRUCE_ENGINE_PACKAGE_VERSION" ||
+        "$engine_commit" != "$SPRUCE_ENGINE_UPSTREAM_COMMIT" ]]; then
+        gui_emit_failed "engine_identity_mismatch" "engine.engine_identity_mismatch"
+        return 1
+    fi
     if [[ "$protocol" != "$SPRUCE_GUI_PROTOCOL_VERSION" || "$stored_plan_id" != "$plan_id" ||
         ("$scope" != "clean" && "$scope" != "uninstall" && "$scope" != "toolbox") ||
         ! "$created_at" =~ ^[0-9]+$ || ! "$expires_at" =~ ^[0-9]+$ ]]; then
