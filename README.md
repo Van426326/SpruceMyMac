@@ -20,7 +20,7 @@ communicates through a versioned NDJSON protocol.
 ## Download and install
 
 The current release is
-[SpruceMyMac 0.2.2](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.2).
+[SpruceMyMac 0.2.3](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.3).
 You can also use the stable
 [latest-release link](https://github.com/Van426326/SpruceMyMac/releases/latest)
 and download `SpruceMyMac.dmg`.
@@ -129,8 +129,8 @@ with the installed App. The active and previous versions are stored under
 the App bundle remains the final fallback. Settings also provides an action to
 restore the bundled Engine.
 
-SpruceMyMac 0.2.2 bundles Engine 1.0.1, and the public Engine feed also points
-to Engine 1.0.1. Therefore, a new 0.2.2 installation currently reports that
+SpruceMyMac 0.2.3 bundles Engine 1.0.1, and the public Engine feed also points
+to Engine 1.0.1. Therefore, a new 0.2.3 installation currently reports that
 its Engine is up to date. Future Engine releases with a higher compatible
 version can be installed from Settings without downloading the whole App.
 

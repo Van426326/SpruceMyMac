@@ -3,6 +3,14 @@
 All notable changes to SpruceMyMac are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## 0.2.3 - 2026-08-09
+
+### Fixed
+
+- Crop the icon to the transparent green artwork and remove the obsolete gray
+  screenshot border.
+- Clean and soften segmentation artifacts around the transparent icon edge.
+
 ## 0.2.2 - 2026-08-09
 
 ### Changed

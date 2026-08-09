@@ -140,7 +140,7 @@ private struct AboutView: View {
     @State private var legalDocument: BundledLegalDocument?
 
     private var version: String {
-        let marketing = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.2.2"
+        let marketing = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.2.3"
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "3"
         return String(localized: "版本 \(marketing)（\(build)）")
     }
