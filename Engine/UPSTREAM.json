@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "protocolVersions": [1],
   "minAppBuild": 1,
-  "maxAppBuild": 1,
+  "maxAppBuild": 2,
   "minMacOS": "14.0",
   "architectures": ["arm64", "x86_64"],
   "capabilities": [
