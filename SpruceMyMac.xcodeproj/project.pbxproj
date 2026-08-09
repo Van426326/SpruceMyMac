@@ -596,7 +596,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.van426326.sprucemymac;
 				PRODUCT_NAME = SpruceMyMac;
 				SDKROOT = macosx;
@@ -699,7 +699,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.van426326.sprucemymac;
 				PRODUCT_NAME = SpruceMyMac;
 				SDKROOT = macosx;
