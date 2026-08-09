@@ -97,6 +97,7 @@ jobs:
             gh release create "$RELEASE_TAG" \
               build/engine-release/* \
               --target "$GITHUB_SHA" \
+              --latest=false \
               --title "SpruceMyMac Engine $VERSION" \
               --notes "Signed SpruceMyMac engine package and complete corresponding GPL source. These versioned assets are immutable."
           fi

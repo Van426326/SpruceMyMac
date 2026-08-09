@@ -143,6 +143,9 @@ from that tagged commit and publishes these immutable versioned assets:
 - `SpruceMyMac-Engine-<version>-manifest.sig`
 - SHA-256 checksum files for all four
 
+Versioned Engine releases are explicitly marked `--latest=false` so they never
+displace the latest downloadable App release in GitHub's release UI.
+
 The separate prerelease tag `engine-feed` contains only mutable aliases named
 `engine-manifest.json` and `engine-manifest.sig`, available at:
 
