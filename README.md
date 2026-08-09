@@ -20,7 +20,7 @@ communicates through a versioned NDJSON protocol.
 ## Download and install
 
 The current release is
-[SpruceMyMac 0.2.1](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.1).
+[SpruceMyMac 0.2.2](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.2).
 You can also use the stable
 [latest-release link](https://github.com/Van426326/SpruceMyMac/releases/latest)
 and download `SpruceMyMac.dmg`.
@@ -82,7 +82,7 @@ or no longer match their original filesystem identity.
 
 The UI source language is Simplified Chinese and every shipped string has an
 English fallback. The app icon source master is kept in
-[`Brand/SpruceMyMac-AppIcon.svg`](Brand/SpruceMyMac-AppIcon.svg).
+[`Brand/SpruceMyMac-AppIcon.png`](Brand/SpruceMyMac-AppIcon.png).
 
 ## Prepare the Mole engine
 
@@ -129,8 +129,8 @@ with the installed App. The active and previous versions are stored under
 the App bundle remains the final fallback. Settings also provides an action to
 restore the bundled Engine.
 
-SpruceMyMac 0.2.1 bundles Engine 1.0.1, and the public Engine feed also points
-to Engine 1.0.1. Therefore, a new 0.2.1 installation currently reports that
+SpruceMyMac 0.2.2 bundles Engine 1.0.1, and the public Engine feed also points
+to Engine 1.0.1. Therefore, a new 0.2.2 installation currently reports that
 its Engine is up to date. Future Engine releases with a higher compatible
 version can be installed from Settings without downloading the whole App.
 

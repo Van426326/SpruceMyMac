@@ -3,6 +3,13 @@
 All notable changes to SpruceMyMac are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## 0.2.2 - 2026-08-09
+
+### Changed
+
+- Replace the macOS application icon with the new glass spruce artwork.
+- Use the same application icon in the sidebar brand and About view.
+
 ## 0.2.1 - 2026-08-09
 
 ### Fixed
