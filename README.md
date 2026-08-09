@@ -1,5 +1,7 @@
 # SpruceMyMac
 
+English | [简体中文](README.zh-CN.md)
+
 SpruceMyMac is an independent, open-source macOS cleanup and storage-inspection app. It is built with SwiftUI and uses a versioned, structured bridge to the cleaning capabilities of [tw93/Mole](https://github.com/tw93/Mole).
 
 The current build provides the native app shell, live system storage and memory
@@ -11,20 +13,42 @@ communicates through a versioned NDJSON protocol.
 
 ## Requirements
 
-- macOS 14 or newer
-- Xcode 16 or newer
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+- To run the app: macOS 14 or newer
+- To build from source: Xcode 16 or newer and
+  [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 
-## Download
+## Download and install
 
-Download the latest `SpruceMyMac.dmg` from
-[GitHub Releases](https://github.com/Van426326/SpruceMyMac/releases/latest).
-The community build is unsigned and supports both Apple silicon and Intel Macs.
-After dragging the app to `/Applications`, the first launch may require
-Control-clicking the app, choosing **Open**, and confirming once.
+The current release is
+[SpruceMyMac 0.2.0](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.0).
+You can also use the stable
+[latest-release link](https://github.com/Van426326/SpruceMyMac/releases/latest)
+and download `SpruceMyMac.dmg`.
+
+The community build is unsigned and supports both Apple silicon and Intel Macs:
+
+1. Download `SpruceMyMac.dmg` and, optionally, `SpruceMyMac.dmg.sha256`.
+2. If you downloaded both files, verify the DMG in Terminal:
+
+   ```bash
+   shasum -a 256 -c SpruceMyMac.dmg.sha256
+   ```
+
+3. Open the DMG and drag `SpruceMyMac.app` to `/Applications`.
+4. On first launch, Control-click the app, choose **Open**, and confirm. If
+   macOS still blocks it, open **System Settings → Privacy & Security** and use
+   **Open Anyway** for SpruceMyMac.
 
 SHA-256 checksum files and the complete corresponding GPL source archive are
 published beside every DMG.
+
+### Upgrading from 0.1.0
+
+Manual Engine updates are supported starting with SpruceMyMac 0.2.0. Users of
+0.1.0 must download and install 0.2.0 from GitHub Releases once; the Engine
+updater updates only the cleaning Engine and cannot replace or upgrade the App
+itself. Installing 0.2.0 over the existing copy does not require an Engine
+update first.
 
 ## Build
 
@@ -90,20 +114,30 @@ All apply operations accept opaque candidate IDs only, revalidate the complete
 selection before moving anything, atomically consume the plan to prevent
 replay, and route removals through Mole's Trash deletion funnel.
 
-## Manual engine updates
+## Manual Engine updates
 
-The Settings window can manually check for a newer SpruceMyMac Engine package.
-Downloaded engines are accepted only after an embedded Ed25519 public key
-verifies the signed manifest, every payload file matches that manifest, and the
-engine reports a protocol and App-build range compatible with this build. The
-active and previous versions are stored under
-`~/Library/Application Support/SpruceMyMac/Engines`; the immutable engine in
-the App bundle remains the final fallback.
+Manual Engine updates require SpruceMyMac 0.2.0 or newer. In the Settings
+window, users can inspect the current Engine and choose **Check for Updates**.
+There is no background installation: the user explicitly checks, reviews, and
+installs an available update.
+
+Downloaded engines are accepted only after the embedded SpruceMyMac Ed25519
+public key verifies the signed manifest, every payload file matches that
+manifest, and the Engine reports a protocol and App-build range compatible
+with the installed App. The active and previous versions are stored under
+`~/Library/Application Support/SpruceMyMac/Engines`; the immutable Engine in
+the App bundle remains the final fallback. Settings also provides an action to
+restore the bundled Engine.
+
+SpruceMyMac 0.2.0 bundles Engine 1.0.0, and the initial public Engine feed also
+points to Engine 1.0.0. Therefore, a new 0.2.0 installation currently reports
+that its Engine is up to date. Future Engine releases with a higher compatible
+version can be installed from Settings without downloading the whole App.
 
 No signing key is committed to this repository. Builds without an
 `ENGINE_SIGNING_PUBLIC_KEY` safely disable the Check for Updates button, ignore
 downloaded engines that cannot be authenticated without that trust root, and
-continue using the bundled engine. They never fall back to an unsigned update.
+continue using the bundled Engine. They never fall back to an unsigned update.
 Release-key provisioning and Engine package publication are documented in
 [`docs/RELEASE.md`](docs/RELEASE.md).
 
