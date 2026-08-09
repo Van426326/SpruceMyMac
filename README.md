@@ -20,7 +20,7 @@ communicates through a versioned NDJSON protocol.
 ## Download and install
 
 The current release is
-[SpruceMyMac 0.2.0](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.0).
+[SpruceMyMac 0.2.1](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.1).
 You can also use the stable
 [latest-release link](https://github.com/Van426326/SpruceMyMac/releases/latest)
 and download `SpruceMyMac.dmg`.
@@ -45,10 +45,10 @@ published beside every DMG.
 ### Upgrading from 0.1.0
 
 Manual Engine updates are supported starting with SpruceMyMac 0.2.0. Users of
-0.1.0 must download and install 0.2.0 from GitHub Releases once; the Engine
-updater updates only the cleaning Engine and cannot replace or upgrade the App
-itself. Installing 0.2.0 over the existing copy does not require an Engine
-update first.
+0.1.0 must download and install 0.2.0 or newer from GitHub Releases once; the
+Engine updater updates only the cleaning Engine and cannot replace or upgrade
+the App itself. Installing the current release over the existing copy does not
+require an Engine update first.
 
 ## Build
 
@@ -129,9 +129,9 @@ with the installed App. The active and previous versions are stored under
 the App bundle remains the final fallback. Settings also provides an action to
 restore the bundled Engine.
 
-SpruceMyMac 0.2.0 bundles Engine 1.0.0, and the initial public Engine feed also
-points to Engine 1.0.0. Therefore, a new 0.2.0 installation currently reports
-that its Engine is up to date. Future Engine releases with a higher compatible
+SpruceMyMac 0.2.1 bundles Engine 1.0.1, and the public Engine feed also points
+to Engine 1.0.1. Therefore, a new 0.2.1 installation currently reports that
+its Engine is up to date. Future Engine releases with a higher compatible
 version can be installed from Settings without downloading the whole App.
 
 No signing key is committed to this repository. Builds without an

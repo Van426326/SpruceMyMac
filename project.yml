@@ -36,8 +36,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.van426326.sprucemymac
         PRODUCT_NAME: SpruceMyMac
-        MARKETING_VERSION: 0.2.0
-        CURRENT_PROJECT_VERSION: 2
+        MARKETING_VERSION: 0.2.1
+        CURRENT_PROJECT_VERSION: 3
         ENGINE_SIGNING_PUBLIC_KEY: ""
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: SpruceMyMac

@@ -8,7 +8,6 @@ export LC_ALL=C
 export LANG=C
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 export MO_NO_OPLOG=1
-export MOLE_LOG_DIR="${SPRUCE_ENGINE_LOG_DIR:-$HOME/Library/Logs/SpruceMyMac}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -32,6 +31,8 @@ if [[ "${1:-}" == "engine-info" ]]; then
     gui_engine_info_main "$@"
     exit $?
 fi
+
+export MOLE_LOG_DIR="${SPRUCE_ENGINE_LOG_DIR:-$HOME/Library/Logs/SpruceMyMac}"
 
 readonly SPRUCE_ENGINE_METADATA_FILE="$SCRIPT_DIR/../engine-info.json"
 SPRUCE_ENGINE_PACKAGE_VERSION=$(/usr/bin/awk -F'"' '$2 == "engineVersion" { print $4; exit }' "$SPRUCE_ENGINE_METADATA_FILE" 2> /dev/null || true)

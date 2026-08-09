@@ -177,6 +177,8 @@ struct SystemEngineProcessRunner: EngineProcessRunning {
         process.standardError = error
         process.environment = [
             "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+            "HOME": FileManager.default.homeDirectoryForCurrentUser.path,
+            "TMPDIR": FileManager.default.temporaryDirectory.path,
             "LC_ALL": "C",
             "LANG": "C",
             "NO_COLOR": "1"

@@ -15,7 +15,7 @@ SpruceMyMac 是一款独立、开源的 macOS 清理与存储空间检查应用�
 ## 下载与安装
 
 当前版本是
-[SpruceMyMac 0.2.0](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.0)。
+[SpruceMyMac 0.2.1](https://github.com/Van426326/SpruceMyMac/releases/tag/v0.2.1)。
 也可以通过稳定的
 [最新版下载链接](https://github.com/Van426326/SpruceMyMac/releases/latest)
 下载 `SpruceMyMac.dmg`。
@@ -36,7 +36,7 @@ SpruceMyMac 是一款独立、开源的 macOS 清理与存储空间检查应用�
 
 ### 从 0.1.0 升级
 
-SpruceMyMac 从 0.2.0 开始支持手动更新 Engine。0.1.0 用户必须先从 GitHub Releases 手动下载并安装一次 0.2.0；Engine 更新器只更新清理 Engine，不能替换或升级 App 本身。直接使用 0.2.0 覆盖现有 App 即可，安装前不需要先更新 Engine。
+SpruceMyMac 从 0.2.0 开始支持手动更新 Engine。0.1.0 用户必须先从 GitHub Releases 手动下载并安装一次 0.2.0 或更高版本；Engine 更新器只更新清理 Engine，不能替换或升级 App 本身。直接使用当前版本覆盖现有 App 即可，安装前不需要先更新 Engine。
 
 ## 从源码构建
 
@@ -93,7 +93,7 @@ gui.sh apply-plan --plan-id <id> --items <id,id> --format ndjson --no-auth
 
 只有满足以下条件的下载 Engine 才会被接受：App 内置的 SpruceMyMac Ed25519 公钥成功验证签名 manifest；每个 payload 文件都与 manifest 完全一致；Engine 报告的协议版本和 App build 兼容范围与当前 App 匹配。active 和 previous 版本保存在 `~/Library/Application Support/SpruceMyMac/Engines`；App bundle 中不可变的内置 Engine 始终作为最终回退。设置中也提供恢复内置 Engine 的操作。
 
-SpruceMyMac 0.2.0 内置 Engine 1.0.0，初始公开 Engine Feed 同样指向 Engine 1.0.0。因此，全新安装的 0.2.0 当前会显示 Engine 已是最新版本。以后发布版本更高且兼容的 Engine 后，用户可以直接在设置中安装，无需重新下载整个 App。
+SpruceMyMac 0.2.1 内置 Engine 1.0.1，公开 Engine Feed 同样指向 Engine 1.0.1。因此，全新安装的 0.2.1 当前会显示 Engine 已是最新版本。以后发布版本更高且兼容的 Engine 后，用户可以直接在设置中安装，无需重新下载整个 App。
 
 仓库中不提交任何签名密钥。未设置 `ENGINE_SIGNING_PUBLIC_KEY` 的构建会安全禁用“检查更新”按钮，忽略无法通过信任根认证的下载 Engine，并继续使用内置 Engine；应用绝不会降级为接受未签名更新。发布密钥配置和 Engine 包发布流程记录在 [`docs/RELEASE.md`](docs/RELEASE.md) 中。
 
